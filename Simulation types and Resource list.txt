@@ -8,6 +8,9 @@ height field simulation
 http://matthias-mueller-fischer.ch/talks/GDC2008.pdf
 http://zejiazheng.com/?p=87
 
+layered water (wave breaking and height fields)
+http://www.balintmiklos.com/layered_water.pdf
+
 shallow water simulation
 http://matthias-mueller-fischer.ch/publications/SPHShallow.pdf
 
