@@ -14,8 +14,8 @@ http://www.balintmiklos.com/layered_water.pdf
 shallow water simulation
 http://matthias-mueller-fischer.ch/publications/SPHShallow.pdf
 
-more advances on above
-same website
+more advances on above ( waves and bubbles)
+same website - publications
 
 wave particles
 http://old.cescg.org/CESCG-2015/papers/Mikes-Real-time_Water_Simulation_with_Wave_Particles_on_the_GPU.pdf
