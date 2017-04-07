@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)http://www.roxlu.com/2013/024/height-field-simulation-on-gpu -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title></title>
+  <meta name="description" content="">
+  <link rel="stylesheet" href="./height-field-simulation-on-gpu_files/roxlu.css">
+  <link href="./height-field-simulation-on-gpu_files/css" rel="stylesheet" type="text/css">  
+  <link href="./height-field-simulation-on-gpu_files/css(1)" rel="stylesheet" type="text/css">
+  <script type="text/javascript" async="" src="./height-field-simulation-on-gpu_files/ga.js.download"></script><script src="./height-field-simulation-on-gpu_files/mootools-core-1.4.5-full-nocompat-yc.js.download"></script>
+  <script src="./height-field-simulation-on-gpu_files/roxlu.js.download"></script>
+</head>
+<body>
+  <div id="about">
+    Blog of roxlu, co-founder of <a href="http://www.apollomedia.nl/">Apollo Media</a>. Contact info[shift+2]apollomedia.nl.
+  </div>  
+  <a href="http://www.apollomedia.nl/"><img id="logo" src="./height-field-simulation-on-gpu_files/logo.png" alt="Apollo Media"></a>
+  <div id="content">
+
+
+    <div id="page">
+
+      <ul id="post_links">
+            <li>
+        <a href="http://www.roxlu.com/2016/057/compiling-x264-on-windows-with-msvc">Compiling x264 on Windows with MSVC</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2016/056/c-c---snippets">C/C++ Snippets</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2015/054/reading-chunks-from-a-buffer">Reading Chunks from a Buffer</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2015/053/handy-bash-commands">Handy Bash Commands</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2015/052/building-a-zero-copy-parser">Building a zero copy parser</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2015/051/kalman-filter">Kalman Filter</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2015/050/saving-pixel-data-using-libpng">Saving pixel data using libpng</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/049/compile-apache--php-and-mysql-on-mac-10-10">Compile Apache, PHP and MySQL on Mac 10.10</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/048/fast-pixel-transfers-with-pixel-buffer-objects">Fast Pixel Transfers with Pixel Buffer Objects</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/047/high-resolution-timer-function-in-c-c--">High Resolution Timer function in C/C++</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/046/rendering-text-with-pango--cairo-and-freetype">Rendering text with Pango, Cairo and Freetype</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/045/fast-opengl-blur-shader">Fast OpenGL blur shader</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/043/spherical-environment-mapping-with-opengl">Spherical Environment Mapping with OpenGL</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/042/using-openssl-with-memory-bios">Using OpenSSL with memory BIOs</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/041/attributeless-vertex-shader-with-opengl">Attributeless Vertex Shader with OpenGL</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/040/circular-image-selector">Circular Image Selector</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/039/decoding-h264-and-yuv420p-playback">Decoding H264 and YUV420P playback</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/038/fast-fourier-transform">Fast Fourier Transform</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/037/opengl-rim-shader">OpenGL Rim Shader</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/036/rendering-the-depth-buffer">Rendering The Depth Buffer</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/035/delaunay-triangulation">Delaunay Triangulation</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/034/rapidxml">RapidXML</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/033/git-snippets">Git Snippets</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/032/cross-platform-opengl">Cross Platform OpenGL</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/031/basic-shading-with-opengl">Basic Shading With OpenGL</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/030/open-source-libraries-for-creative-coding">Open Source Libraries For Creative Coding</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/029/bouncing-particle-effect">Bouncing particle effect</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/028/opengl-instanced-rendering">OpenGL Instanced Rendering</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/027/a-collection-of-interesting-articles">A Collection Of Interesting Articles</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/026/mapping-a-texture-on-a-disc">Mapping a texture on a disc</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2014/025/download-html-page-using-curl">Download HTML page using CURL</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/024/height-field-simulation-on-gpu">Height Field Simulation on GPU</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/023/scholar">Scholar</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/022/opencv">OpenCV</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/021/opengl">openGL</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/020/math">Math</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/019/gists-to-remember">Gists to remember</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/018/reverse-ssh">Reverse SSH</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/017/working-set">Working Set</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/016/consumer---producer-model-with-libuv">Consumer + Producer model with libuv</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/015/parsing-binary-data">Parsing binary data</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/014/c---file-operation-snippets">C++ file operation snippets</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/013/importance-of-blur-with-image-gradients">Importance of blur with image gradients</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/012/real-time-oil-painting-with-opengl">Real-time oil painting with openGL</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/011/basic-cuda-example">Basic CUDA example</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/010/x264-encoder">x264 encoder</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/009/generative-helix-with-opengl">Generative helix with openGL</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/008/mini-test-with-vector-field">Mini test with vector field</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/007/protractor-gesture-recognizer">Protractor gesture recognizer</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/006/hair-simulation">Hair simulation</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/005/some-glitch-screenshots">Some glitch screenshots</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/004/working-on-video-installation">Working on video installation</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/003/generative-meshes">Generative meshes</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/002/converting-video-audio-using-avconv">Converting video/audio using avconv</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2013/001/auto-start-terminal-app-on-mac">Auto start terminal app on mac</a>
+        </li>
+            <li>
+        <a href="http://www.roxlu.com/2012/001/export-blender-object-to-simple-file-format">Export blender object to simple file format</a>
+        </li>
+            </ul>
+
+      <h1>Height Field Simulation on GPU</h1>
+
+<p>The code below shows a first rough implementation of a height
+field simulation on GPU. It was an experiment to test different
+approaches to perform calculations on the GPU; this one uses
+plain textures from which we read the current values and another
+set of textures into which the new results are written.</p>
+
+<p><img src="./height-field-simulation-on-gpu_files/024.heightfield1.png" alt=""></p>
+
+<p>The <a href="http://roxlu.com/downloads/scholar/fluid_height_field_simulation.pdf">height field algorithm</a>
+diffuses a certain value In my case I used this value as height. 
+On the CPU this looks something like the code below. We need two arrays, 
+one array <code>float u0[FIELD_NN]</code> that contains the current heights, 
+and another one <code>float u1[FIELD_NN]</code> into which we write the changed 
+values using the current velocity array (<code>float v[FIELD_NN]</code>). After 
+traversing all the cells in the grid, we copy the new values from <code>u1</code> 
+into <code>u0</code> so the newest values will be used during the next iteration.</p>
+
+<p>The value of <code>c</code> needs to be in a certain range if you want to get 
+good results, see the height field slides from the link above.</p>
+
+<p><a href="http://www.roxlu.com/downloads/heightfield.zip">Download the code here. Tested only on a mac 10.9.</a></p>
+
+<p><em>Height Field on CPU</em></p>
+
+<pre class="c" style="font-family:monospace;"><span style="color: #993333;">void</span> Water<span style="color: #339933;">::</span><span style="color: #202020;">updateHeightField</span><span style="color: #009900;">(</span><span style="color: #993333;">float</span> dt<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  <span style="color: #993333;">float</span> c <span style="color: #339933;">=</span> <span style="color:#800080;">1.0</span><span style="color: #339933;">;</span>
+  <span style="color: #993333;">float</span> max_c <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color:#800080;">1.0</span> <span style="color: #339933;">/</span> dt<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span>c <span style="color: #339933;">&gt;</span> max_c<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"Warning: invalid C value<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  dt <span style="color: #339933;">=</span> dt <span style="color: #339933;">*</span> <span style="color:#800080;">4.9</span><span style="color: #339933;">;</span>
+  <span style="color: #b1b100;">for</span><span style="color: #009900;">(</span><span style="color: #993333;">int</span> j <span style="color: #339933;">=</span> <span style="color: #0000dd;">1</span><span style="color: #339933;">;</span> j <span style="color: #339933;">&lt;</span> FIELD_N <span style="color: #339933;">-</span> <span style="color: #0000dd;">1</span><span style="color: #339933;">;</span> <span style="color: #339933;">++</span>j<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #b1b100;">for</span><span style="color: #009900;">(</span><span style="color: #993333;">int</span> i <span style="color: #339933;">=</span> <span style="color: #0000dd;">1</span><span style="color: #339933;">;</span> i <span style="color: #339933;">&lt;</span> FIELD_N <span style="color: #339933;">-</span> <span style="color: #0000dd;">1</span><span style="color: #339933;">;</span> <span style="color: #339933;">++</span>i<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      <span style="color: #993333;">int</span> current <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color: #009900;">(</span>j <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> FIELD_N<span style="color: #009900;">)</span> <span style="color: #339933;">+</span> <span style="color: #009900;">(</span>i <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #993333;">int</span> right   <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color: #009900;">(</span>j <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> FIELD_N<span style="color: #009900;">)</span> <span style="color: #339933;">+</span> <span style="color: #009900;">(</span>i <span style="color: #339933;">+</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #993333;">int</span> left    <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color: #009900;">(</span>j <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> FIELD_N<span style="color: #009900;">)</span> <span style="color: #339933;">+</span> <span style="color: #009900;">(</span>i <span style="color: #339933;">-</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #993333;">int</span> top     <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color: #009900;">(</span>j <span style="color: #339933;">+</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> FIELD_N<span style="color: #009900;">)</span> <span style="color: #339933;">+</span> <span style="color: #009900;">(</span>i <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #993333;">int</span> bottom  <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color: #009900;">(</span>j <span style="color: #339933;">-</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> FIELD_N<span style="color: #009900;">)</span> <span style="color: #339933;">+</span> <span style="color: #009900;">(</span>i <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #993333;">float</span> f <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color: #009900;">(</span>c<span style="color: #339933;">*</span>c<span style="color: #009900;">)</span> <span style="color: #339933;">*</span> <span style="color: #009900;">(</span><span style="color: #009900;">(</span>u0<span style="color: #009900;">[</span>right<span style="color: #009900;">]</span> <span style="color: #339933;">+</span> u0<span style="color: #009900;">[</span>left<span style="color: #009900;">]</span> <span style="color: #339933;">+</span> u0<span style="color: #009900;">[</span>bottom<span style="color: #009900;">]</span> <span style="color: #339933;">+</span> u0<span style="color: #009900;">[</span>top<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">-</span> <span style="color: #009900;">(</span><span style="color:#800080;">4.0</span> <span style="color: #339933;">*</span> u0<span style="color: #009900;">[</span>current<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">/</span> <span style="color:#800080;">4.0</span> <span style="color: #339933;">;</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span>f <span style="color: #339933;">&gt;</span> <span style="color:#800080;">0.1</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+        f <span style="color: #339933;">=</span> <span style="color:#800080;">0.1</span><span style="color: #339933;">;</span>
+      <span style="color: #009900;">}</span>
+      <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span>f <span style="color: #339933;">&lt;</span> <span style="color: #339933;">-</span><span style="color:#800080;">0.1</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+        f <span style="color: #339933;">=</span> <span style="color: #339933;">-</span><span style="color:#800080;">0.1</span><span style="color: #339933;">;</span>
+      <span style="color: #009900;">}</span>
+&nbsp;
+      v<span style="color: #009900;">[</span>current<span style="color: #009900;">]</span> <span style="color: #339933;">=</span> v<span style="color: #009900;">[</span>current<span style="color: #009900;">]</span> <span style="color: #339933;">+</span> f <span style="color: #339933;">*</span> dt<span style="color: #339933;">;</span>
+      u1<span style="color: #009900;">[</span>current<span style="color: #009900;">]</span> <span style="color: #339933;">=</span> u0<span style="color: #009900;">[</span>current<span style="color: #009900;">]</span> <span style="color: #339933;">+</span> v<span style="color: #009900;">[</span>current<span style="color: #009900;">]</span> <span style="color: #339933;">*</span> dt<span style="color: #339933;">;</span>
+      v<span style="color: #009900;">[</span>current<span style="color: #009900;">]</span> <span style="color: #339933;">*=</span> <span style="color:#800080;">0.995</span><span style="color: #339933;">;</span>
+&nbsp;
+    <span style="color: #009900;">}</span>
+  <span style="color: #009900;">}</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/memcpy.html"><span style="color: #000066;">memcpy</span></a><span style="color: #009900;">(</span>u0<span style="color: #339933;">,</span> u1<span style="color: #339933;">,</span> <span style="color: #993333;">sizeof</span><span style="color: #009900;">(</span>u0<span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span></pre>
+
+<p>On the GPU, we need to ping/pong between the source values and the
+destination values for both the <em>height</em> values and the <em>velocity</em>
+values, so we need 4 textures for those two values. In the code
+below I also have a texture into which we write the normals that we 
+calculate in a separate step.</p>
+
+<p><em>HeightField.h</em></p>
+
+<pre class="c" style="font-family:monospace;"><span style="color: #808080; font-style: italic;">/*
+&nbsp;
+  HeightField
+  -----------
+&nbsp;
+  This class implements a basic height field diffusion as described in 
+  http://www.matthiasmueller.info/talks/gdc2008.pdf
+&nbsp;
+  We perform the following steps:
+&nbsp;
+  - Diffuse the current height values according to some
+    velocity. We use u0 and u1 as the height values. We need two
+    because we're ping/ponging the values. The current velocity
+    at which the height field diffuses is stored in v0 and v1.
+    After each time step we change `state_diffuse` which toggles
+    the reading/writing from u0/v0 and u1/v1.
+&nbsp;
+  - Once we've done the diffuse step, we perform a processing step
+    where we calculate the world position of the heightfield. These
+    height values are stored in `tex_out_pos`.
+&nbsp;
+  - When we have the positions in `tex_out_pos` we perform on more
+    step where we calculate the normals, and values we might need for
+    water rendering.
+&nbsp;
+  - To render the height field you can use `vertices_vbo` and `vertices_vao`.
+    They are setup in such a way that you'll get one in attribute in your shader
+    called `tex` which contains the row/column into the position texture. Use this
+    to set gl_Position.
+&nbsp;
+  Things to know / improve:
+&nbsp;
+  - We're not reusing the attribute less GL_VERTEX_SHADER;
+&nbsp;
+  - You can use the vertices_vao/vbo to render the height field, see the 
+    debug shaders.
+&nbsp;
+ */</span>
+<span style="color: #339933;">#ifndef ROXLU_HEIGHT_FIELD_H</span>
+<span style="color: #339933;">#define ROXLU_HEIGHT_FIELD_H</span>
+&nbsp;
+<span style="color: #339933;">#define ROXLU_USE_ALL</span>
+<span style="color: #339933;">#include &lt;tinylib.h&gt;</span>
+<span style="color: #339933;">#include &lt;vector&gt;</span>
+&nbsp;
+<span style="color: #993333;">struct</span> HeightFieldVertex <span style="color: #009900;">{</span>
+  HeightFieldVertex<span style="color: #009900;">(</span>vec2 texcoord<span style="color: #009900;">)</span><span style="color: #339933;">:</span>tex<span style="color: #009900;">(</span>texcoord<span style="color: #009900;">)</span><span style="color: #009900;">{</span><span style="color: #009900;">}</span>
+  HeightFieldVertex<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">{</span><span style="color: #009900;">}</span>
+  vec2 tex<span style="color: #339933;">;</span>    
+<span style="color: #009900;">}</span><span style="color: #339933;">;</span>
+&nbsp;
+class HeightField <span style="color: #009900;">{</span>
+&nbsp;
+ public<span style="color: #339933;">:</span>
+  HeightField<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  bool setup<span style="color: #009900;">(</span><span style="color: #993333;">int</span> w<span style="color: #339933;">,</span> <span style="color: #993333;">int</span> h<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #993333;">void</span> update<span style="color: #009900;">(</span><span style="color: #993333;">float</span> dt<span style="color: #009900;">)</span><span style="color: #339933;">;</span>     <span style="color: #808080; font-style: italic;">/* diffuses the height field */</span>
+  <span style="color: #993333;">void</span> process<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>            <span style="color: #808080; font-style: italic;">/* processes the current values, calculates normals, create position texture etc.. */</span>
+  <span style="color: #993333;">void</span> debugDraw<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #993333;">void</span> print<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>               <span style="color: #808080; font-style: italic;">/* print some debug info */</span>
+&nbsp;
+ private<span style="color: #339933;">:</span> 
+  bool setupDiffusing<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>     <span style="color: #808080; font-style: italic;">/* setup GL state for the diffusion step */</span>
+  bool setupProcessing<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>    <span style="color: #808080; font-style: italic;">/* setup GL state for the processing step; calculates normals, positions, texcoord etc.. using the current field values */</span>
+  bool setupDebug<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>         <span style="color: #808080; font-style: italic;">/* setup GL state for debugging */</span>
+  bool setupVertices<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>      <span style="color: #808080; font-style: italic;">/* create the triangle mesh (or the order of vertices, position is extracted from the position texture) */</span>
+&nbsp;
+ public<span style="color: #339933;">:</span>
+&nbsp;
+  <span style="color: #808080; font-style: italic;">/* diffusion of height field */</span>
+  GLuint field_fbo<span style="color: #339933;">;</span>
+  GLuint tex_u0<span style="color: #339933;">;</span>              <span style="color: #808080; font-style: italic;">/* height value */</span>
+  GLuint tex_u1<span style="color: #339933;">;</span>              <span style="color: #808080; font-style: italic;">/* height value */</span>
+  GLuint tex_v0<span style="color: #339933;">;</span>              <span style="color: #808080; font-style: italic;">/* velocity at which u diffuses */</span>
+  GLuint tex_v1<span style="color: #339933;">;</span>              <span style="color: #808080; font-style: italic;">/* velocity at which u diffuses */</span>
+  GLint u_dt<span style="color: #339933;">;</span>                 <span style="color: #808080; font-style: italic;">/* reference to our dt uniform */</span>
+  GLuint field_vao<span style="color: #339933;">;</span>           <span style="color: #808080; font-style: italic;">/* we need a vao to render attribute less vertices */</span>
+  Program field_prog<span style="color: #339933;">;</span>         <span style="color: #808080; font-style: italic;">/* this program does the diffuse step */</span>
+  <span style="color: #993333;">int</span> state_diffuse<span style="color: #339933;">;</span>          <span style="color: #808080; font-style: italic;">/* toggles between 0 and 1 to ping/pong the diffuse/vel textures */</span>
+&nbsp;
+  <span style="color: #808080; font-style: italic;">/* general info */</span>
+  <span style="color: #993333;">int</span> field_size<span style="color: #339933;">;</span>             <span style="color: #808080; font-style: italic;">/* the size of our rectangular height field */</span>
+  <span style="color: #993333;">int</span> win_w<span style="color: #339933;">;</span>                  <span style="color: #808080; font-style: italic;">/* window width, use to reset the viewport */</span>
+  <span style="color: #993333;">int</span> win_h<span style="color: #339933;">;</span>                  <span style="color: #808080; font-style: italic;">/* window height, used to reset the viewport */</span>
+&nbsp;
+  <span style="color: #808080; font-style: italic;">/* used to process the height field and extract some usefull data */</span>
+  GLuint process_fbo<span style="color: #339933;">;</span>         <span style="color: #808080; font-style: italic;">/* we use a separate FBO to perform the processing step so we have some space for extra attachments */</span>
+  GLuint tex_out_norm<span style="color: #339933;">;</span>        <span style="color: #808080; font-style: italic;">/* the GL_RGB32F texture that will keep our calculated normals */</span>
+  GLuint tex_out_pos<span style="color: #339933;">;</span>         <span style="color: #808080; font-style: italic;">/* the GL_RGB32F texture that will keep our positions */</span>
+  GLuint tex_out_texcoord<span style="color: #339933;">;</span>    <span style="color: #808080; font-style: italic;">/* the GL_RG32F texture that will keep our texcoords */</span>
+  Program process_prog<span style="color: #339933;">;</span>       <span style="color: #808080; font-style: italic;">/* the program we use to calculate things like normals, etc.. */</span>
+  Program pos_prog<span style="color: #339933;">;</span>           <span style="color: #808080; font-style: italic;">/* the program we use to calculate the positions */</span>
+&nbsp;
+  <span style="color: #808080; font-style: italic;">/* used to debug draw */</span>
+  Program debug_prog<span style="color: #339933;">;</span>         <span style="color: #808080; font-style: italic;">/* debug shaders, shows how to set gl_Position */</span>
+  mat4 pm<span style="color: #339933;">;</span>                    <span style="color: #808080; font-style: italic;">/* projection matrix */</span>
+  mat4 vm<span style="color: #339933;">;</span>                    <span style="color: #808080; font-style: italic;">/* view matrix */</span>
+&nbsp;
+  <span style="color: #808080; font-style: italic;">/* vertices */</span>
+  std<span style="color: #339933;">::</span><span style="color: #202020;">vector</span><span style="color: #339933;">&lt;</span>HeightFieldVertex<span style="color: #339933;">&gt;</span> vertices<span style="color: #339933;">;</span>    <span style="color: #808080; font-style: italic;">/* The vertices that you can use to render a triangular height field, see the debug shader */</span>
+  GLuint vertices_vbo<span style="color: #339933;">;</span>                        <span style="color: #808080; font-style: italic;">/* VBO that holds the HeightFieldVertex data that forms the height field triangular grid */</span>
+  GLuint vertices_vao<span style="color: #339933;">;</span>                        <span style="color: #808080; font-style: italic;">/* The VAO to draw the height field vertices */</span>
+<span style="color: #009900;">}</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #339933;">#endif</span></pre>
+
+<p><em>HeightField.cpp</em></p>
+
+<pre class="c" style="font-family:monospace;"><span style="color: #339933;">#include "HeightField.h"</span>
+&nbsp;
+HeightField<span style="color: #339933;">::</span><span style="color: #202020;">HeightField</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span> 
+  <span style="color: #339933;">:</span>field_fbo<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>tex_u0<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>tex_u1<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>tex_v0<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>tex_v1<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>field_size<span style="color: #009900;">(</span><span style="color: #0000dd;">128</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>field_vao<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>state_diffuse<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>win_w<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>win_h<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>process_fbo<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>tex_out_norm<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>tex_out_pos<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>tex_out_texcoord<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>vertices_vbo<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+  <span style="color: #339933;">,</span>vertices_vao<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span>
+<span style="color: #009900;">{</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+bool HeightField<span style="color: #339933;">::</span><span style="color: #202020;">setup</span><span style="color: #009900;">(</span><span style="color: #993333;">int</span> w<span style="color: #339933;">,</span> <span style="color: #993333;">int</span> h<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+&nbsp;
+  <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span><span style="color: #339933;">!</span>w <span style="color: #339933;">||</span> <span style="color: #339933;">!</span>h<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"Error: invalid width/height: %d x %d<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #339933;">,</span> w<span style="color: #339933;">,</span> h<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  win_w <span style="color: #339933;">=</span> w<span style="color: #339933;">;</span>
+  win_h <span style="color: #339933;">=</span> h<span style="color: #339933;">;</span>
+&nbsp;
+  glGenVertexArrays<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>field_vao<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span><span style="color: #339933;">!</span>setupDiffusing<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"Error: cannot set GL state for the diffuse step.<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span><span style="color: #339933;">!</span>setupProcessing<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"Error: cannot setup the GL state for the processing.<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span><span style="color: #339933;">!</span>setupVertices<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"Error: cannot setup the vertices for the height field.<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span><span style="color: #339933;">!</span>setupDebug<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"Error: cannot setup the GL state for debugging.<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+bool HeightField<span style="color: #339933;">::</span><span style="color: #202020;">setupVertices</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  glGenVertexArrays<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>vertices_vao<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindVertexArray<span style="color: #009900;">(</span>vertices_vao<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glGenBuffers<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>vertices_vbo<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindBuffer<span style="color: #009900;">(</span>GL_ARRAY_BUFFER<span style="color: #339933;">,</span> vertices_vbo<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  std<span style="color: #339933;">::</span><span style="color: #202020;">vector</span><span style="color: #339933;">&lt;</span>HeightFieldVertex<span style="color: #339933;">&gt;</span> tmp<span style="color: #009900;">(</span>field_size <span style="color: #339933;">*</span> field_size<span style="color: #339933;">,</span> HeightFieldVertex<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #b1b100;">for</span><span style="color: #009900;">(</span><span style="color: #993333;">int</span> j <span style="color: #339933;">=</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">;</span> j <span style="color: #339933;">&lt;</span> field_size<span style="color: #339933;">;</span> <span style="color: #339933;">++</span>j<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #b1b100;">for</span><span style="color: #009900;">(</span><span style="color: #993333;">int</span> i <span style="color: #339933;">=</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">;</span> i <span style="color: #339933;">&lt;</span> field_size<span style="color: #339933;">;</span> <span style="color: #339933;">++</span>i<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      <span style="color: #993333;">int</span> dx <span style="color: #339933;">=</span> j <span style="color: #339933;">*</span> field_size <span style="color: #339933;">+</span> i<span style="color: #339933;">;</span>
+      tmp<span style="color: #009900;">[</span>dx<span style="color: #009900;">]</span>.<span style="color: #202020;">tex</span>.<span style="color: #202020;">set</span><span style="color: #009900;">(</span>i<span style="color: #339933;">,</span> j<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #b1b100;">for</span><span style="color: #009900;">(</span><span style="color: #993333;">int</span> j <span style="color: #339933;">=</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">;</span> j <span style="color: #339933;">&lt;</span> field_size<span style="color: #339933;">-</span><span style="color: #0000dd;">1</span><span style="color: #339933;">;</span> <span style="color: #339933;">++</span>j<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #b1b100;">for</span><span style="color: #009900;">(</span><span style="color: #993333;">int</span> i <span style="color: #339933;">=</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">;</span> i <span style="color: #339933;">&lt;</span> field_size<span style="color: #339933;">-</span><span style="color: #0000dd;">1</span><span style="color: #339933;">;</span> <span style="color: #339933;">++</span>i<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      <span style="color: #993333;">int</span> a <span style="color: #339933;">=</span> <span style="color: #009900;">(</span>j <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> field_size <span style="color: #339933;">+</span> <span style="color: #009900;">(</span>i <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #993333;">int</span> b <span style="color: #339933;">=</span> <span style="color: #009900;">(</span>j <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> field_size <span style="color: #339933;">+</span> <span style="color: #009900;">(</span>i <span style="color: #339933;">+</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #993333;">int</span> c <span style="color: #339933;">=</span> <span style="color: #009900;">(</span>j <span style="color: #339933;">+</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> field_size <span style="color: #339933;">+</span> <span style="color: #009900;">(</span>i <span style="color: #339933;">+</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #993333;">int</span> d <span style="color: #339933;">=</span> <span style="color: #009900;">(</span>j <span style="color: #339933;">+</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span> <span style="color: #339933;">*</span> field_size <span style="color: #339933;">+</span> <span style="color: #009900;">(</span>i <span style="color: #339933;">+</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      vertices.<span style="color: #202020;">push_back</span><span style="color: #009900;">(</span>tmp<span style="color: #009900;">[</span>a<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      vertices.<span style="color: #202020;">push_back</span><span style="color: #009900;">(</span>tmp<span style="color: #009900;">[</span>b<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      vertices.<span style="color: #202020;">push_back</span><span style="color: #009900;">(</span>tmp<span style="color: #009900;">[</span>c<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      vertices.<span style="color: #202020;">push_back</span><span style="color: #009900;">(</span>tmp<span style="color: #009900;">[</span>a<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      vertices.<span style="color: #202020;">push_back</span><span style="color: #009900;">(</span>tmp<span style="color: #009900;">[</span>c<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      vertices.<span style="color: #202020;">push_back</span><span style="color: #009900;">(</span>tmp<span style="color: #009900;">[</span>d<span style="color: #009900;">]</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">}</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  glBufferData<span style="color: #009900;">(</span>GL_ARRAY_BUFFER<span style="color: #339933;">,</span> <span style="color: #993333;">sizeof</span><span style="color: #009900;">(</span>HeightFieldVertex<span style="color: #009900;">)</span> <span style="color: #339933;">*</span> vertices.<span style="color: #202020;">size</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> vertices<span style="color: #009900;">[</span><span style="color: #0000dd;">0</span><span style="color: #009900;">]</span>.<span style="color: #202020;">tex</span>.<span style="color: #202020;">ptr</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> GL_STATIC_DRAW<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glEnableVertexAttribArray<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span> <span style="color: #666666; font-style: italic;">// tex</span>
+  glVertexAttribPointer<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">2</span><span style="color: #339933;">,</span> GL_FLOAT<span style="color: #339933;">,</span> GL_FALSE<span style="color: #339933;">,</span> <span style="color: #993333;">sizeof</span><span style="color: #009900;">(</span>HeightFieldVertex<span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #009900;">(</span>GLvoid<span style="color: #339933;">*</span><span style="color: #009900;">)</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+bool HeightField<span style="color: #339933;">::</span><span style="color: #202020;">setupDebug</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+&nbsp;
+  pm.<span style="color: #202020;">perspective</span><span style="color: #009900;">(</span><span style="color:#800080;">60.0f</span><span style="color: #339933;">,</span> <span style="color: #993333;">float</span><span style="color: #009900;">(</span>win_w<span style="color: #009900;">)</span><span style="color: #339933;">/</span>win_h<span style="color: #339933;">,</span> <span style="color:#800080;">0.01f</span><span style="color: #339933;">,</span> <span style="color:#800080;">100.0f</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #666666; font-style: italic;">//vm.lookAt(vec3(0.0f, 35.0f, 0.0f), vec3(0.0f, 0.0f, 0.1f), vec3(0.0f, 1.0f, 0.0f));</span>
+  vm.<span style="color: #202020;">translate</span><span style="color: #009900;">(</span><span style="color:#800080;">0.0f</span><span style="color: #339933;">,</span> <span style="color:#800080;">0.0f</span><span style="color: #339933;">,</span> <span style="color: #339933;">-</span><span style="color:#800080;">30.0f</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  vm.<span style="color: #202020;">rotateX</span><span style="color: #009900;">(</span><span style="color: #0000dd;">30</span> <span style="color: #339933;">*</span> DEG_TO_RAD<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #993333;">const</span> <span style="color: #993333;">char</span><span style="color: #339933;">*</span> atts<span style="color: #009900;">[</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #009900;">{</span> <span style="color: #ff0000;">"a_tex"</span> <span style="color: #009900;">}</span><span style="color: #339933;">;</span>
+  debug_prog.<span style="color: #202020;">create</span><span style="color: #009900;">(</span>GL_VERTEX_SHADER<span style="color: #339933;">,</span> rx_to_data_path<span style="color: #009900;">(</span><span style="color: #ff0000;">"height_field_debug.vert"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  debug_prog.<span style="color: #202020;">create</span><span style="color: #009900;">(</span>GL_FRAGMENT_SHADER<span style="color: #339933;">,</span> rx_to_data_path<span style="color: #009900;">(</span><span style="color: #ff0000;">"height_field_debug.frag"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  debug_prog.<span style="color: #202020;">link</span><span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> atts<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glUseProgram<span style="color: #009900;">(</span>debug_prog.<span style="color: #202020;">id</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniformMatrix4fv<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>debug_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_pm"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> GL_FALSE<span style="color: #339933;">,</span> pm.<span style="color: #202020;">ptr</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniformMatrix4fv<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>debug_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_vm"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> GL_FALSE<span style="color: #339933;">,</span> vm.<span style="color: #202020;">ptr</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniform1i<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>debug_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_pos_tex"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+bool HeightField<span style="color: #339933;">::</span><span style="color: #202020;">setupProcessing</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+&nbsp;
+  glGenTextures<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>tex_out_norm<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_out_norm<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexImage2D<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RGB32F<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RGB<span style="color: #339933;">,</span> GL_FLOAT<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_S<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_T<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MIN_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MAG_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glGenTextures<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>tex_out_pos<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_out_pos<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexImage2D<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RGB32F<span style="color: #339933;">,</span>field_size<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RGB<span style="color: #339933;">,</span> GL_FLOAT<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_S<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_T<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MIN_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MAG_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glGenTextures<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>tex_out_texcoord<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_out_texcoord<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexImage2D<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RG32F<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RG<span style="color: #339933;">,</span> GL_FLOAT<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_S<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_T<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MIN_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MAG_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glGenFramebuffers<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>process_fbo<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> process_fbo<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glFramebufferTexture2D<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT0<span style="color: #339933;">,</span> GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_out_pos<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glFramebufferTexture2D<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT1<span style="color: #339933;">,</span> GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_out_norm<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glFramebufferTexture2D<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT2<span style="color: #339933;">,</span> GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_out_texcoord<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span>glCheckFramebufferStatus<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #009900;">)</span> <span style="color: #339933;">!=</span> GL_FRAMEBUFFER_COMPLETE<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"Error: process framebuffer not complete.<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #666666; font-style: italic;">// Position processing</span>
+  <span style="color: #993333;">const</span> <span style="color: #993333;">char</span><span style="color: #339933;">*</span> pos_frags<span style="color: #009900;">[</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #009900;">{</span> <span style="color: #ff0000;">"out_pos"</span> <span style="color: #009900;">}</span><span style="color: #339933;">;</span>
+  pos_prog.<span style="color: #202020;">create</span><span style="color: #009900;">(</span>GL_VERTEX_SHADER<span style="color: #339933;">,</span> rx_to_data_path<span style="color: #009900;">(</span><span style="color: #ff0000;">"height_field.vert"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  pos_prog.<span style="color: #202020;">create</span><span style="color: #009900;">(</span>GL_FRAGMENT_SHADER<span style="color: #339933;">,</span> rx_to_data_path<span style="color: #009900;">(</span><span style="color: #ff0000;">"height_field_pos.frag"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  pos_prog.<span style="color: #202020;">link</span><span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> NULL<span style="color: #339933;">,</span> <span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> pos_frags<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUseProgram<span style="color: #009900;">(</span>pos_prog.<span style="color: #202020;">id</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniform1i<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>pos_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_height_tex"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniform1i<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>pos_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_vel_tex"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+&nbsp;
+  <span style="color: #666666; font-style: italic;">// Extra processing</span>
+  <span style="color: #993333;">const</span> <span style="color: #993333;">char</span><span style="color: #339933;">*</span> process_frags<span style="color: #009900;">[</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #009900;">{</span> <span style="color: #ff0000;">"out_norm"</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"out_tex"</span> <span style="color: #009900;">}</span><span style="color: #339933;">;</span>
+  process_prog.<span style="color: #202020;">create</span><span style="color: #009900;">(</span>GL_VERTEX_SHADER<span style="color: #339933;">,</span> rx_to_data_path<span style="color: #009900;">(</span><span style="color: #ff0000;">"height_field.vert"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  process_prog.<span style="color: #202020;">create</span><span style="color: #009900;">(</span>GL_FRAGMENT_SHADER<span style="color: #339933;">,</span> rx_to_data_path<span style="color: #009900;">(</span><span style="color: #ff0000;">"height_field_process.frag"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  process_prog.<span style="color: #202020;">link</span><span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> NULL<span style="color: #339933;">,</span> <span style="color: #0000dd;">2</span><span style="color: #339933;">,</span> process_frags<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUseProgram<span style="color: #009900;">(</span>process_prog.<span style="color: #202020;">id</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniform1i<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>process_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_height_tex"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniform1i<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>process_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_vel_tex"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniform1i<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>process_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_pos_tex"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">2</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+bool HeightField<span style="color: #339933;">::</span><span style="color: #202020;">setupDiffusing</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+&nbsp;
+  <span style="color: #666666; font-style: italic;">// some text data</span>
+  <span style="color: #993333;">float</span><span style="color: #339933;">*</span> u <span style="color: #339933;">=</span> new <span style="color: #993333;">float</span><span style="color: #009900;">[</span>field_size <span style="color: #339933;">*</span> field_size<span style="color: #009900;">]</span><span style="color: #339933;">;</span>
+  <span style="color: #993333;">float</span><span style="color: #339933;">*</span> v <span style="color: #339933;">=</span> new <span style="color: #993333;">float</span><span style="color: #009900;">[</span>field_size <span style="color: #339933;">*</span> field_size<span style="color: #009900;">]</span><span style="color: #339933;">;</span>
+  <span style="color: #993333;">int</span> upper <span style="color: #339933;">=</span> <span style="color: #0000dd;">50</span><span style="color: #339933;">;</span>
+  <span style="color: #993333;">int</span> lower <span style="color: #339933;">=</span> <span style="color: #0000dd;">30</span><span style="color: #339933;">;</span>
+  <span style="color: #b1b100;">for</span><span style="color: #009900;">(</span><span style="color: #993333;">int</span> j <span style="color: #339933;">=</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">;</span> j <span style="color: #339933;">&lt;</span> field_size<span style="color: #339933;">;</span> <span style="color: #339933;">++</span>j<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #b1b100;">for</span><span style="color: #009900;">(</span><span style="color: #993333;">int</span> i <span style="color: #339933;">=</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">;</span> i <span style="color: #339933;">&lt;</span> field_size<span style="color: #339933;">;</span> <span style="color: #339933;">++</span>i<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      u<span style="color: #009900;">[</span>j <span style="color: #339933;">*</span> field_size <span style="color: #339933;">+</span> i<span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color:#800080;">0.0f</span><span style="color: #339933;">;</span>
+      v<span style="color: #009900;">[</span>j <span style="color: #339933;">*</span> field_size <span style="color: #339933;">+</span> i<span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color:#800080;">0.0f</span><span style="color: #339933;">;</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span>i <span style="color: #339933;">&gt;</span> lower <span style="color: #339933;">&amp;&amp;</span> i <span style="color: #339933;">&lt;</span> upper <span style="color: #339933;">&amp;&amp;</span> j <span style="color: #339933;">&gt;</span> lower <span style="color: #339933;">&amp;&amp;</span> j <span style="color: #339933;">&lt;</span> upper<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+        u<span style="color: #009900;">[</span>j <span style="color: #339933;">*</span> field_size <span style="color: #339933;">+</span> i<span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color:#800080;">3.5</span><span style="color: #339933;">;</span>
+      <span style="color: #009900;">}</span>
+    <span style="color: #009900;">}</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  glGenTextures<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>tex_u0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_u0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexImage2D<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_R32F<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RED<span style="color: #339933;">,</span> GL_FLOAT<span style="color: #339933;">,</span> u<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_S<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_T<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MIN_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MAG_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glGenTextures<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>tex_u1<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_u1<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexImage2D<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_R32F<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RED<span style="color: #339933;">,</span> GL_FLOAT<span style="color: #339933;">,</span> u<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_S<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_T<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MIN_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MAG_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glGenTextures<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>tex_v0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_v0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexImage2D<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_R32F<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RED<span style="color: #339933;">,</span> GL_FLOAT<span style="color: #339933;">,</span> v<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_S<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_T<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MIN_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MAG_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glGenTextures<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>tex_v1<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_v1<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexImage2D<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_R32F<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> GL_RED<span style="color: #339933;">,</span> GL_FLOAT<span style="color: #339933;">,</span> v<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_S<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_WRAP_T<span style="color: #339933;">,</span> GL_CLAMP_TO_EDGE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MIN_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glTexParameteri<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> GL_TEXTURE_MAG_FILTER<span style="color: #339933;">,</span> GL_NEAREST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+&nbsp;
+  glGenFramebuffers<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> <span style="color: #339933;">&amp;</span>field_fbo<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> field_fbo<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glFramebufferTexture2D<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT0<span style="color: #339933;">,</span> GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_u0<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glFramebufferTexture2D<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT1<span style="color: #339933;">,</span> GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_u1<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glFramebufferTexture2D<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT2<span style="color: #339933;">,</span> GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_v0<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glFramebufferTexture2D<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT3<span style="color: #339933;">,</span> GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_v1<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span>glCheckFramebufferStatus<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #009900;">)</span> <span style="color: #339933;">!=</span> GL_FRAMEBUFFER_COMPLETE<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"Error: diffuse framebuffer not complete.<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #993333;">const</span> <span style="color: #993333;">char</span><span style="color: #339933;">*</span> frags<span style="color: #009900;">[</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #009900;">{</span> <span style="color: #ff0000;">"out_height"</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"out_vel"</span> <span style="color: #009900;">}</span> <span style="color: #339933;">;</span>
+  field_prog.<span style="color: #202020;">create</span><span style="color: #009900;">(</span>GL_VERTEX_SHADER<span style="color: #339933;">,</span> rx_to_data_path<span style="color: #009900;">(</span><span style="color: #ff0000;">"height_field.vert"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  field_prog.<span style="color: #202020;">create</span><span style="color: #009900;">(</span>GL_FRAGMENT_SHADER<span style="color: #339933;">,</span> rx_to_data_path<span style="color: #009900;">(</span><span style="color: #ff0000;">"height_field.frag"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  field_prog.<span style="color: #202020;">link</span><span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> NULL<span style="color: #339933;">,</span> <span style="color: #0000dd;">2</span><span style="color: #339933;">,</span> frags<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glUseProgram<span style="color: #009900;">(</span>field_prog.<span style="color: #202020;">id</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniform1i<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>field_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_height_tex"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniform1i<span style="color: #009900;">(</span>glGetUniformLocation<span style="color: #009900;">(</span>field_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_vel_tex"</span><span style="color: #009900;">)</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  u_dt <span style="color: #339933;">=</span> glGetUniformLocation<span style="color: #009900;">(</span>field_prog.<span style="color: #202020;">id</span><span style="color: #339933;">,</span> <span style="color: #ff0000;">"u_dt"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  delete<span style="color: #009900;">[</span><span style="color: #009900;">]</span> v<span style="color: #339933;">;</span>
+  delete<span style="color: #009900;">[</span><span style="color: #009900;">]</span> u<span style="color: #339933;">;</span> 
+  u <span style="color: #339933;">=</span> NULL<span style="color: #339933;">;</span>
+  v <span style="color: #339933;">=</span> NULL<span style="color: #339933;">;</span>
+  <span style="color: #b1b100;">return</span> <span style="color: #000000; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+<span style="color: #993333;">void</span> HeightField<span style="color: #339933;">::</span><span style="color: #202020;">update</span><span style="color: #009900;">(</span><span style="color: #993333;">float</span> dt<span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  glDisable<span style="color: #009900;">(</span>GL_DEPTH_TEST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glDisable<span style="color: #009900;">(</span>GL_BLEND<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glViewport<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> field_fbo<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUseProgram<span style="color: #009900;">(</span>field_prog.<span style="color: #202020;">id</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindVertexArray<span style="color: #009900;">(</span>field_vao<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUniform1f<span style="color: #009900;">(</span>u_dt<span style="color: #339933;">,</span> dt<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  state_diffuse <span style="color: #339933;">=</span> <span style="color: #0000dd;">1</span> <span style="color: #339933;">-</span> state_diffuse<span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span>state_diffuse <span style="color: #339933;">==</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+    <span style="color: #666666; font-style: italic;">// read from u0, write to u1</span>
+    <span style="color: #666666; font-style: italic;">// read from v0, write to v1</span>
+    GLenum drawbufs<span style="color: #009900;">[</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #009900;">{</span> GL_COLOR_ATTACHMENT1<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT3 <span style="color: #009900;">}</span><span style="color: #339933;">;</span>
+    glDrawBuffers<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> drawbufs<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+    glActiveTexture<span style="color: #009900;">(</span>GL_TEXTURE0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_u0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    glActiveTexture<span style="color: #009900;">(</span>GL_TEXTURE2<span style="color: #009900;">)</span><span style="color: #339933;">;</span>  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_v0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+    glDrawArrays<span style="color: #009900;">(</span>GL_TRIANGLE_STRIP<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">4</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+  <span style="color: #b1b100;">else</span> <span style="color: #009900;">{</span>
+    <span style="color: #666666; font-style: italic;">// read from u1, write to u0</span>
+    <span style="color: #666666; font-style: italic;">// read from v1, write to v0</span>
+    GLenum drawbufs<span style="color: #009900;">[</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #009900;">{</span> GL_COLOR_ATTACHMENT0<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT2 <span style="color: #009900;">}</span><span style="color: #339933;">;</span>
+    glDrawBuffers<span style="color: #009900;">(</span><span style="color: #0000dd;">2</span><span style="color: #339933;">,</span> drawbufs<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+    glActiveTexture<span style="color: #009900;">(</span>GL_TEXTURE0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_u1<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    glActiveTexture<span style="color: #009900;">(</span>GL_TEXTURE3<span style="color: #009900;">)</span><span style="color: #339933;">;</span>  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_v1<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    glDrawArrays<span style="color: #009900;">(</span>GL_TRIANGLE_STRIP<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">4</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glViewport<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> win_w<span style="color: #339933;">,</span> win_h<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+<span style="color: #993333;">void</span> HeightField<span style="color: #339933;">::</span><span style="color: #202020;">process</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> process_fbo<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glViewport<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindVertexArray<span style="color: #009900;">(</span>field_vao<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glActiveTexture<span style="color: #009900;">(</span>GL_TEXTURE0<span style="color: #009900;">)</span><span style="color: #339933;">;</span> glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_u0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glActiveTexture<span style="color: #009900;">(</span>GL_TEXTURE1<span style="color: #009900;">)</span><span style="color: #339933;">;</span> glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_v0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  <span style="color: #009900;">{</span>
+    <span style="color: #666666; font-style: italic;">// Calculate positions.</span>
+    glUseProgram<span style="color: #009900;">(</span>pos_prog.<span style="color: #202020;">id</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+    GLenum drawbufs<span style="color: #009900;">[</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #009900;">{</span> GL_COLOR_ATTACHMENT0 <span style="color: #009900;">}</span> <span style="color: #339933;">;</span> <span style="color: #666666; font-style: italic;">// , GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 } ;</span>
+    glDrawBuffers<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span> drawbufs<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    glDrawArrays<span style="color: #009900;">(</span>GL_TRIANGLE_STRIP<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">4</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  <span style="color: #009900;">{</span>
+    <span style="color: #666666; font-style: italic;">// Use positions to calc normals, etc..</span>
+    glUseProgram<span style="color: #009900;">(</span>process_prog.<span style="color: #202020;">id</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+    GLenum drawbufs<span style="color: #009900;">[</span><span style="color: #009900;">]</span> <span style="color: #339933;">=</span> <span style="color: #009900;">{</span> GL_COLOR_ATTACHMENT1<span style="color: #339933;">,</span> GL_COLOR_ATTACHMENT2 <span style="color: #009900;">}</span><span style="color: #339933;">;</span>
+    glDrawBuffers<span style="color: #009900;">(</span><span style="color: #0000dd;">2</span><span style="color: #339933;">,</span> drawbufs<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+    glActiveTexture<span style="color: #009900;">(</span>GL_TEXTURE2<span style="color: #009900;">)</span><span style="color: #339933;">;</span> 
+    glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_out_pos<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+    glDrawArrays<span style="color: #009900;">(</span>GL_TRIANGLE_STRIP<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">4</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #009900;">}</span>
+&nbsp;
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+<span style="color: #993333;">void</span> HeightField<span style="color: #339933;">::</span><span style="color: #202020;">debugDraw</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  glViewport<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> win_w<span style="color: #339933;">,</span> win_h<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_FRAMEBUFFER<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span> <span style="color: #666666; font-style: italic;">// tmp</span>
+  glDisable<span style="color: #009900;">(</span>GL_DEPTH_TEST<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glBindVertexArray<span style="color: #009900;">(</span>vertices_vao<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glUseProgram<span style="color: #009900;">(</span>debug_prog.<span style="color: #202020;">id</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glActiveTexture<span style="color: #009900;">(</span>GL_TEXTURE0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindTexture<span style="color: #009900;">(</span>GL_TEXTURE_2D<span style="color: #339933;">,</span> tex_out_pos<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+  glPolygonMode<span style="color: #009900;">(</span>GL_FRONT_AND_BACK<span style="color: #339933;">,</span> GL_LINE<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <span style="color: #666666; font-style: italic;">//glDrawArrays(GL_TRIANGLES, 0, vertices.size());</span>
+  glDrawArrays<span style="color: #009900;">(</span>GL_POINTS<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> vertices.<span style="color: #202020;">size</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glPolygonMode<span style="color: #009900;">(</span>GL_FRONT_AND_BACK<span style="color: #339933;">,</span> GL_FILL<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #339933;">#if 1</span>
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_READ_FRAMEBUFFER<span style="color: #339933;">,</span> field_fbo<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBindFramebuffer<span style="color: #009900;">(</span>GL_DRAW_FRAMEBUFFER<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glReadBuffer<span style="color: #009900;">(</span>GL_COLOR_ATTACHMENT0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  glBlitFramebuffer<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> field_size<span style="color: #339933;">,</span> GL_COLOR_BUFFER_BIT<span style="color: #339933;">,</span> GL_LINEAR<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+<span style="color: #339933;">#endif</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+&nbsp;
+<span style="color: #993333;">void</span> HeightField<span style="color: #339933;">::</span><span style="color: #202020;">print</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"heightfield.tex_u0: %d<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #339933;">,</span> tex_u0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"heightfield.tex_u1: %d<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #339933;">,</span> tex_u1<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"heightfield.tex_v0: %d<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #339933;">,</span> tex_v0<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"heightfield.tex_v1: %d<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #339933;">,</span> tex_v1<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"heightfield.tex_out_norm: %d<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #339933;">,</span> tex_out_norm<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"heightfield.tex_out_texcoord: %d<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #339933;">,</span> tex_out_texcoord<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+  <a href="http://www.opengroup.org/onlinepubs/009695399/functions/printf.html"><span style="color: #000066;">printf</span></a><span style="color: #009900;">(</span><span style="color: #ff0000;">"heightfield.tex_out_pos: %d<span style="color: #000099; font-weight: bold;">\n</span>"</span><span style="color: #339933;">,</span> tex_out_pos<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span></pre>
+
+<p><em>height_field.vert</em></p>
+
+<pre class="glsl" style="font-family:monospace;"><span style="color: #009900;">#version 150</span>
+&nbsp;
+<span style="color: #333399; font-weight: bold;">const</span> <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">[</span><span style="color: #000066;">]</span> pos <span style="color: #000066;">=</span> <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">[</span><span style="color: #0000ff;">4</span><span style="color: #000066;">]</span><span style="color: #000066;">(</span>
+  <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">(</span><span style="color: #000066;">-</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">,</span>
+  <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">(</span><span style="color: #000066;">-</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">,</span> <span style="color: #000066;">-</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">,</span>
+  <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">(</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">,</span>
+  <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">(</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">,</span> <span style="color: #000066;">-</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span>
+<span style="color: #000066;">)</span><span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #333399; font-weight: bold;">const</span> <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">[</span><span style="color: #000066;">]</span> tex <span style="color: #000066;">=</span> <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">[</span><span style="color: #0000ff;">4</span><span style="color: #000066;">]</span><span style="color: #000066;">(</span>
+  <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">(</span><span style="color: #0000ff;">0.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">,</span>
+  <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">(</span><span style="color: #0000ff;">0.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">0.0</span><span style="color: #000066;">)</span><span style="color: #000066;">,</span>
+  <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">(</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">,</span>
+  <span style="color: #000066; font-weight: bold;">vec2</span><span style="color: #000066;">(</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">0.0</span><span style="color: #000066;">)</span>
+<span style="color: #000066;">)</span><span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #333399; font-weight: bold;">out</span> <span style="color: #000066; font-weight: bold;">vec2</span> v_tex<span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #000066; font-weight: bold;">void</span> main<span style="color: #000066;">(</span><span style="color: #000066;">)</span> <span style="color: #000066;">{</span>
+  <span style="color: #551111;">gl_Position</span> <span style="color: #000066;">=</span> <span style="color: #000066; font-weight: bold;">vec4</span><span style="color: #000066;">(</span>pos<span style="color: #000066;">[</span>gl_VertexID<span style="color: #000066;">]</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">0.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">;</span>
+  v_tex <span style="color: #000066;">=</span> tex<span style="color: #000066;">[</span>gl_VertexID<span style="color: #000066;">]</span><span style="color: #000066;">;</span>
+<span style="color: #000066;">}</span></pre>
+
+<p><em>height_field.frag</em></p>
+
+<pre class="glsl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;">/*
+&nbsp;
+  Height Field Water Simulation
+  -----------------------------
+  - See http://www.matthiasmueller.info/talks/gdc2008.pdf
+  - The value of c must be limited to: 1.0/dt, so 30fps, 1.0/0.033 = 33.33.
+&nbsp;
+ */</span>
+&nbsp;
+<span style="color: #009900;">#version 150</span>
+&nbsp;
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> u_height_tex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> u_vel_tex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">float</span> u_dt<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">out</span> <span style="color: #000066; font-weight: bold;">float</span> out_height<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">out</span> <span style="color: #000066; font-weight: bold;">float</span> out_vel<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec2</span> v_tex<span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #000066; font-weight: bold;">void</span> main<span style="color: #000066;">(</span><span style="color: #000066;">)</span> <span style="color: #000066;">{</span>
+&nbsp;
+  <span style="color: #000066; font-weight: bold;">float</span> u        <span style="color: #000066;">=</span> texture<span style="color: #000066;">(</span>u_height_tex<span style="color: #000066;">,</span> v_tex<span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">r</span><span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> u_right  <span style="color: #000066;">=</span> textureOffset<span style="color: #000066;">(</span>u_height_tex<span style="color: #000066;">,</span> v_tex<span style="color: #000066;">,</span> <span style="color: #000066; font-weight: bold;">ivec2</span><span style="color: #000066;">(</span> <span style="color: #0000ff;">1.0</span><span style="color: #000066;">,</span>  <span style="color: #0000ff;">0.0</span><span style="color: #000066;">)</span><span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">r</span><span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> u_left   <span style="color: #000066;">=</span> textureOffset<span style="color: #000066;">(</span>u_height_tex<span style="color: #000066;">,</span> v_tex<span style="color: #000066;">,</span> <span style="color: #000066; font-weight: bold;">ivec2</span><span style="color: #000066;">(</span><span style="color: #000066;">-</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">,</span>  <span style="color: #0000ff;">0.0</span><span style="color: #000066;">)</span><span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">r</span><span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> u_top    <span style="color: #000066;">=</span> textureOffset<span style="color: #000066;">(</span>u_height_tex<span style="color: #000066;">,</span> v_tex<span style="color: #000066;">,</span> <span style="color: #000066; font-weight: bold;">ivec2</span><span style="color: #000066;">(</span> <span style="color: #0000ff;">0.0</span><span style="color: #000066;">,</span> <span style="color: #000066;">-</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">r</span><span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> u_bottom <span style="color: #000066;">=</span> textureOffset<span style="color: #000066;">(</span>u_height_tex<span style="color: #000066;">,</span> v_tex<span style="color: #000066;">,</span> <span style="color: #000066; font-weight: bold;">ivec2</span><span style="color: #000066;">(</span> <span style="color: #0000ff;">0.0</span><span style="color: #000066;">,</span>  <span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">r</span><span style="color: #000066;">;</span>
+&nbsp;
+  <span style="color: #000066; font-weight: bold;">float</span> c <span style="color: #000066;">=</span> <span style="color: #0000ff;">50.0</span><span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">float</span> f <span style="color: #000066;">=</span> <span style="color: #000066;">(</span><span style="color: #000066;">(</span>c<span style="color: #000066;">*</span>c<span style="color: #000066;">)</span> <span style="color: #000066;">*</span> <span style="color: #000066;">(</span><span style="color: #000066;">(</span>u_right <span style="color: #000066;">+</span> u_left <span style="color: #000066;">+</span> u_top <span style="color: #000066;">+</span> u_bottom<span style="color: #000066;">)</span> <span style="color: #000066;">-</span> <span style="color: #000066;">(</span><span style="color: #0000ff;">4.0</span> <span style="color: #000066;">*</span> u<span style="color: #000066;">)</span><span style="color: #000066;">)</span> <span style="color: #000066;">)</span> <span style="color: #000066;">/</span> <span style="color: #0000ff;">4.0</span><span style="color: #000066;">;</span>
+&nbsp;
+  <span style="color: #000066; font-weight: bold;">float</span> v <span style="color: #000066;">=</span> texture<span style="color: #000066;">(</span>u_vel_tex<span style="color: #000066;">,</span> v_tex<span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">r</span> <span style="color: #000066;">+</span> f <span style="color: #000066;">*</span> u_dt<span style="color: #000066;">;</span>
+  out_height <span style="color: #000066;">=</span> u <span style="color: #000066;">+</span> v <span style="color: #000066;">*</span> u_dt<span style="color: #000066;">;</span>
+  out_vel <span style="color: #000066;">=</span> v <span style="color: #000066;">*</span> <span style="color: #0000ff;">0.996</span><span style="color: #000066;">;</span>
+<span style="color: #000066;">}</span></pre>
+
+<p><em>height_field_debug.vert</em></p>
+
+<pre class="glsl" style="font-family:monospace;"><span style="color: #009900;">#version 150</span>
+&nbsp;
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec2</span> a_tex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> u_pm<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">mat4</span> u_vm<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> u_pos_tex<span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #000066; font-weight: bold;">void</span> main<span style="color: #000066;">(</span><span style="color: #000066;">)</span> <span style="color: #000066;">{</span>
+  <span style="color: #000066; font-weight: bold;">vec4</span> world_pos <span style="color: #000066;">=</span> <span style="color: #000066; font-weight: bold;">vec4</span><span style="color: #000066;">(</span>texelFetch<span style="color: #000066;">(</span>u_pos_tex<span style="color: #000066;">,</span> <span style="color: #000066; font-weight: bold;">ivec2</span><span style="color: #000066;">(</span>a_tex<span style="color: #000066;">)</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">0</span><span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">rgb</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">;</span>
+  <span style="color: #551111;">gl_Position</span> <span style="color: #000066;">=</span> u_pm <span style="color: #000066;">*</span> u_vm <span style="color: #000066;">*</span> world_pos<span style="color: #000066;">;</span>
+<span style="color: #000066;">}</span></pre>
+
+<p><em>height_field_debug.frag</em></p>
+
+<pre class="glsl" style="font-family:monospace;"><span style="color: #009900;">#version 150</span>
+&nbsp;
+<span style="color: #333399; font-weight: bold;">out</span> <span style="color: #000066; font-weight: bold;">vec4</span> fragcolor<span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #000066; font-weight: bold;">void</span> main<span style="color: #000066;">(</span><span style="color: #000066;">)</span> <span style="color: #000066;">{</span>
+  fragcolor <span style="color: #000066;">=</span> <span style="color: #000066; font-weight: bold;">vec4</span><span style="color: #000066;">(</span><span style="color: #0000ff;">1.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">0.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">0.0</span><span style="color: #000066;">,</span> <span style="color: #0000ff;">1.0</span><span style="color: #000066;">)</span><span style="color: #000066;">;</span>
+<span style="color: #000066;">}</span></pre>
+
+<p><em>height_field_pos.frag</em></p>
+
+<pre class="glsl" style="font-family:monospace;"><span style="color: #009900;">#version 150</span>
+&nbsp;
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> u_height_tex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> u_vel_tex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">out</span> <span style="color: #000066; font-weight: bold;">vec3</span> out_pos<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec2</span> v_tex<span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #333399; font-weight: bold;">const</span> <span style="color: #000066; font-weight: bold;">float</span> size_x <span style="color: #000066;">=</span> <span style="color: #0000ff;">35.0</span><span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">const</span> <span style="color: #000066; font-weight: bold;">float</span> size_y <span style="color: #000066;">=</span> <span style="color: #0000ff;">35.0</span><span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">const</span> <span style="color: #000066; font-weight: bold;">float</span> field_size <span style="color: #000066;">=</span> <span style="color: #0000ff;">128.0</span><span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">const</span> <span style="color: #000066; font-weight: bold;">float</span> half_x <span style="color: #000066;">=</span> size_x <span style="color: #000066;">*</span> <span style="color: #0000ff;">0.5</span><span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">const</span> <span style="color: #000066; font-weight: bold;">float</span> half_y <span style="color: #000066;">=</span> size_y <span style="color: #000066;">*</span> <span style="color: #0000ff;">0.5</span><span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #000066; font-weight: bold;">void</span> main<span style="color: #000066;">(</span><span style="color: #000066;">)</span> <span style="color: #000066;">{</span>
+  <span style="color: #000066; font-weight: bold;">float</span> u <span style="color: #000066;">=</span> texture<span style="color: #000066;">(</span>u_height_tex<span style="color: #000066;">,</span>v_tex<span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">r</span><span style="color: #000066;">;</span>
+  out_pos <span style="color: #000066;">=</span> <span style="color: #000066; font-weight: bold;">vec3</span><span style="color: #000066;">(</span><span style="color: #000066;">-</span>half_x <span style="color: #000066;">+</span> <span style="color: #000066;">(</span>v_tex<span style="color: #000066;">.</span><span style="color: #006600;">s</span> <span style="color: #000066;">*</span> size_x<span style="color: #000066;">)</span><span style="color: #000066;">,</span> 
+                  u<span style="color: #000066;">,</span> 
+                 <span style="color: #000066;">-</span>half_y <span style="color: #000066;">+</span> <span style="color: #000066;">(</span>v_tex<span style="color: #000066;">.</span><span style="color: #006600;">t</span> <span style="color: #000066;">*</span> size_y<span style="color: #000066;">)</span><span style="color: #000066;">)</span><span style="color: #000066;">;</span>
+<span style="color: #000066;">}</span></pre>
+
+<p><em>height_field_process.frag</em></p>
+
+<pre class="glsl" style="font-family:monospace;"><span style="color: #666666; font-style: italic;">/*
+&nbsp;
+  - Uses the calculated position to calculate the height values.
+  - I'm not sure is I need to calculate dx/dy using a stepsize of 2 or 1
+&nbsp;
+ */</span>
+<span style="color: #009900;">#version 150</span>
+&nbsp;
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> u_pos_tex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> u_height_tex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">uniform</span> <span style="color: #000066; font-weight: bold;">sampler2D</span> u_vel_tex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">out</span> <span style="color: #000066; font-weight: bold;">vec3</span> out_norm<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">out</span> <span style="color: #000066; font-weight: bold;">vec2</span> out_tex<span style="color: #000066;">;</span>
+<span style="color: #333399; font-weight: bold;">in</span> <span style="color: #000066; font-weight: bold;">vec2</span> v_tex<span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #000066; font-weight: bold;">void</span> main<span style="color: #000066;">(</span><span style="color: #000066;">)</span> <span style="color: #000066;">{</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> center <span style="color: #000066;">=</span> texture<span style="color: #000066;">(</span>u_pos_tex<span style="color: #000066;">,</span> v_tex<span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">rgb</span><span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> right  <span style="color: #000066;">=</span> textureOffset<span style="color: #000066;">(</span>u_pos_tex<span style="color: #000066;">,</span> v_tex<span style="color: #000066;">,</span> <span style="color: #000066; font-weight: bold;">ivec2</span><span style="color: #000066;">(</span><span style="color: #0000ff;">1</span><span style="color: #000066;">,</span>  <span style="color: #0000ff;">0</span><span style="color: #000066;">)</span><span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">rgb</span><span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> top    <span style="color: #000066;">=</span> textureOffset<span style="color: #000066;">(</span>u_pos_tex<span style="color: #000066;">,</span> v_tex<span style="color: #000066;">,</span> <span style="color: #000066; font-weight: bold;">ivec2</span><span style="color: #000066;">(</span><span style="color: #0000ff;">0</span><span style="color: #000066;">,</span> <span style="color: #000066;">-</span><span style="color: #0000ff;">1</span><span style="color: #000066;">)</span><span style="color: #000066;">)</span><span style="color: #000066;">.</span><span style="color: #006600;">rgb</span><span style="color: #000066;">;</span>
+&nbsp;
+<span style="color: #009900;">#if 1</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> dx <span style="color: #000066;">=</span> right <span style="color: #000066;">-</span> center<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> dy <span style="color: #000066;">=</span> top <span style="color: #000066;">-</span> center<span style="color: #000066;">;</span>
+<span style="color: #009900;">#else</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> dx <span style="color: #000066;">=</span> center <span style="color: #000066;">-</span> right<span style="color: #000066;">;</span>
+  <span style="color: #000066; font-weight: bold;">vec3</span> dy <span style="color: #000066;">=</span> center <span style="color: #000066;">-</span> top<span style="color: #000066;">;</span>
+<span style="color: #009900;">#endif</span>
+&nbsp;
+  out_norm <span style="color: #000066;">=</span> <span style="color: #993333; font-weight: bold;">normalize</span><span style="color: #000066;">(</span><span style="color: #993333; font-weight: bold;">cross</span><span style="color: #000066;">(</span>dx<span style="color: #000066;">,</span> dy<span style="color: #000066;">)</span><span style="color: #000066;">)</span><span style="color: #000066;">;</span>
+  out_tex <span style="color: #000066;">=</span> v_tex<span style="color: #000066;">;</span>
+<span style="color: #000066;">}</span>
+&nbsp;
+<span style="color: #666666; font-style: italic;">//vec3 left   = textureOffset(u_pos_tex, v_tex, vec2(-1.0,  0.0)).rgb;</span>
+<span style="color: #666666; font-style: italic;">//vec3 bottom = textureOffset(u_pos_tex, v_tex, vec2( 0.0,  1.0)).rgb;</span>
+<span style="color: #666666; font-style: italic;">//vec3 dx = left - right;</span>
+<span style="color: #666666; font-style: italic;">//vec3 dy = top - bottom;</span></pre>
+
+
+    </div>
+  </div>
+
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-579478-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+
+
+</body></html>
