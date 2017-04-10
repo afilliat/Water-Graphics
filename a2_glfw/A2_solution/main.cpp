@@ -32,7 +32,7 @@
 #include "./include/ShaderUtils.h"
 #include "./include/ShaderProgram.h"
 
-//*************************************************************************************
+//***************************** VBOs  ********************************************************
 
 struct VertexColored {
 	float x, y, z;
@@ -128,6 +128,56 @@ GLubyte *glightBlockBuffer, *gmaterialBlockBuffer;
 glm::vec4 tessLevelOuter(4,4,4,4);
 glm::vec2 tessLevelInner(4,4);
 GLint maxTessLevel = 64;
+
+//**************************************** Height Field ********************************
+float *HeightFieldVertices;
+float **u, **v;
+int heightFieldWidth, heightFieldDepth;
+
+void hfInitialize(int width, int depth) {
+	heightFieldWidth = width;
+	heightFieldDepth = depth;
+
+	//Declare arrays
+	u = new float*[width];
+	v = new float*[width];
+
+	//VBO for vertex position
+	//{x,y,z,x,y,z,.....
+	//y = u
+	HeightFieldVertices = new float[width*depth*3];
+
+	//Initialize arrays
+	for (int x = 0; x < width; x++) {
+		u[x] = new float[depth];
+		for (int z = 0; z < depth; z++) {
+			//u[x][z] = something cool;
+			v[x][z] = 0;
+
+			//3 vertex numbers per one u/v number
+			int vertArrayLoc = (x + z * width) * 3;
+			HeightFieldVertices[vertArrayLoc] = x;
+			HeightFieldVertices[vertArrayLoc + 1] = u[x][z];
+			HeightFieldVertices[vertArrayLoc + 2] = z;
+		}
+	}
+}
+
+int clamp(float value, float min, float max) {
+	return (value >= min ? value : min) <= max ? value : max;
+}
+
+//Algorithm from hello world example in slides
+void hfUpdate() {
+	for (int x = 0; x < heightFieldWidth; x++) {
+		for (int z = 0; z < heightFieldDepth; z++) {
+			v[x][z] += (u[clamp(x - 1, 0, heightFieldWidth - 1)][z] + u[clamp(x + 1, 0, heightFieldWidth - 1)][z] + u[x][clamp(z - 1, 0, heightFieldDepth - 1)] + u[x][clamp(z - 1, 0, heightFieldDepth - 1)]) / 4 - u[x][z];
+			v[x][z] *= 0.99;
+			u[x][z] += v[x][z];
+			HeightFieldVertices[(x + z * heightFieldWidth) * 3 + 2] = u[x][z];
+		}
+	}
+}
 
 //*************************************************************************************
 
@@ -471,7 +521,7 @@ void setupShaders() {
 	glightBlockBuffer        = groundShaderProgram->getUniformBlockBuffer( "LightInfo" );
 	groundShaderProgram->setUniformBlockBinding( "LightInfo", 0 );
 
-	const GLchar *names[] = { "light.position", "light.La", "light.Ld", "light.Ls" };
+	const GLchar *names[] = { "LightInfo.position", "LightInfo.La", "LightInfo.Ld", "LightInfo.Ls" };
 	lightBlockOffset         = bezierPatchShaderProgram->getUniformBlockOffsets( "LightInfo", names );
 	glightBlockOffset        = groundShaderProgram->getUniformBlockOffsets( "LightInfo", names );
 
