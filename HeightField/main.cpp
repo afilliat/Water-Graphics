@@ -101,7 +101,7 @@ bool shiftDown = false;
 bool leftMouseDown = false;
 glm::vec2 mousePosition( -9999.0f, -9999.0f );
 
-glm::vec3 cameraAngles( 1.82f, 2.01f, 15.0f );
+glm::vec3 cameraAngles( -0.5f, 2.0f, 30.0f );
 glm::vec3 eyePoint(   10.0f, 10.0f, 10.0f );
 glm::vec3 lookAtPoint( 0.0f,  0.0f,  0.0f );
 glm::vec3 upVector(    0.0f,  1.0f,  0.0f );
@@ -127,31 +127,40 @@ GLuint vaods[2];
 //**************************************** Height Field ********************************
 GLuint vaoHeightField;
 float *HeightFieldVertices;
-float **u, **v;
+float **u, **v, *g;
+float v_tot, v_cur;
 int heightFieldWidth, heightFieldDepth;
-bool pause = true;
+bool pause = true, wrap = false;
 
 void hfInitialize(int width, int depth) {
 	heightFieldWidth = width;
 	heightFieldDepth = depth;
 
-	//Declare arrays
-	u = new float*[width];
-	v = new float*[width];
-
 	//VBO for vertex position
 	//{x,y,z,x,y,z,.....
 	//y = u
-	HeightFieldVertices = new float[width*depth * 3];
-
+	HeightFieldVertices = new float[width*depth*3];
+	
+	//Declare arrays
+	u = new float*[width];
+	v = new float*[width];
+	g = new float[2*width+2*depth];	//don't need corners
+	
 	//Initialize arrays
+	v_tot = 0;
 	for (int x = 0; x < width; x++) {
 		u[x] = new float[depth];
 		v[x] = new float[depth];
 		for (int z = 0; z < depth; z++) {
-			//u[x][z] = something cool;
-			u[x][z] = 5 + 1.0*(x+z)/5;
+			
+			// if (x < width/2 && z < depth/2) u[x][z] = 10;
+			// if (x > 9 && x < 12 && z > 9 && z < 12) u[x][z] = 20;
+			// else u[x][z] = 5;
+			u[x][z] = 10 + 5 * cos(2*M_PI*x/width) * sin(2*M_PI*z/depth);
+			
 			v[x][z] = 0;
+			
+			v_tot += u[x][z];
 
 			//3 vertex numbers per one u/v number
 			int vertArrayLoc = (x + z * width) * 3;
@@ -162,14 +171,73 @@ void hfInitialize(int width, int depth) {
 	}
 }
 
-//Algorithm from hello world example in slides
+/*
+ * Algorithm for height field propagation
+ * based on 4 surrounding columns
+ * with ghost boundaries for reflection
+ */
 void hfUpdate() {
+	//Update ghost boundaries
+	for (int i = 0; i < 2*heightFieldWidth+2*heightFieldDepth; i++) {
+		/*
+		 *	This is what g[] looks like around u[][]
+		 *	assuming x is cols and z is rows
+		 *	(I didn't really look to find that out)
+		 *	w = width, d = depth
+		 *	--------------------------------------------
+		 *	             g[0]     ...     g[w-1]
+		 *	          -----------------------------
+		 *	g[2w]     | (0,0)   (x,0)   (w-1,0)   | g[2w+d]
+		 *	          |  ...     ...     ...      |
+		 *	...	      | (0,z)   (x,z)   (w-1,z)   | ...
+		 *	          |  ...     ...     ...      |
+		 *	g[2w+d-1] | (0,d-1) (x,d-1) (w-1,d-1) | g[2w+2d-1]
+		 *	          -----------------------------
+		 *	             g[w]     ...     g[2w-1]
+		 *	--------------------------------------------
+		 */
+		if (i < heightFieldWidth) {
+			g[i] = 2*u[i][0] - u[i][1];
+		} else if (i < 2*heightFieldWidth) {
+			g[i] = 2*u[i-heightFieldWidth][heightFieldDepth-1] - u[i-heightFieldWidth][heightFieldDepth-2];
+		} else if (i < 2*heightFieldWidth+heightFieldDepth) {
+			g[i] = 2*u[0][i-2*heightFieldWidth] - u[1][i-2*heightFieldWidth];
+		} else {
+			g[i] = 2*u[heightFieldWidth-1][i-2*heightFieldWidth-heightFieldDepth] - u[heightFieldWidth-2][i-2*heightFieldWidth-heightFieldDepth];
+		}
+	}
+	
+	//Update visible
+	v_cur = 0;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
-			v[x][z] += (u[x-1 >= 0 ? x-1 : 0][z] + u[x][z-1 >= 0 ? z-1 : 0] +
-						u[(x+1 < heightFieldWidth) ? x + 1 : (heightFieldWidth-1)][z] + u[x][(z+1 < heightFieldDepth) ? z+1 : (heightFieldDepth-1)])/4 - u[x][z];
-			v[x][z] *= 0.67;
+			if (wrap) {
+				//wrapping boundaries
+				v[x][z] += ((z-1 >= 0               ? u[x][z-1] : u[x][heightFieldDepth-1]) + 	// g[x];
+							(z+1 < heightFieldDepth ? u[x][z+1] : u[x][0]) +					// g[x+heightFieldWidth];
+							(x-1 >= 0               ? u[x-1][z] : u[heightFieldWidth-1][z]) + 	// g[z+2*heightFieldWidth];
+							(x+1 < heightFieldWidth ? u[x+1][z] : u[0][z])) / 4; 				// g[z+2*heightFieldWidth+heightFieldDepth];
+			} else {
+				//clamp boundaries
+				v[x][z] += ((z-1 >= 0               ? u[x][z-1] : u[x][0]) + 						// g[x];
+							(z+1 < heightFieldDepth ? u[x][z+1] : u[x][heightFieldDepth-1]) +		// g[x+heightFieldWidth];
+							(x-1 >= 0               ? u[x-1][z] : u[0][z]) + 						// g[z+2*heightFieldWidth];
+							(x+1 < heightFieldWidth ? u[x+1][z] : u[heightFieldWidth-1][z])) / 4; 	// g[z+2*heightFieldWidth+heightFieldDepth];
+			}
+			
+			v[x][z] -= u[x][z];
+			v[x][z] *= 0.666;	//Damping
 			u[x][z] += v[x][z];
+			
+			v_cur += u[x][z];
+		}
+	}
+	
+	//Prevent addition or removal of water from the system
+	float v_dif = (v_tot - v_cur) / heightFieldWidth / heightFieldDepth;
+	for (int x = 0; x < heightFieldWidth; x++) {
+		for (int z = 0; z < heightFieldDepth; z++) {
+			u[x][z] += v_dif;
 			HeightFieldVertices[(x + z * heightFieldWidth) * 3 + 1] = u[x][z];
 		}
 	}
@@ -196,12 +264,50 @@ static void error_callback(int error, const char* description) {
 
 // handle key events
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	//Quit
 	if ((key == GLFW_KEY_ESCAPE || key == 'Q') && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	if ((key == GLFW_KEY_ESCAPE || key == 'R') && action == GLFW_PRESS)
-		hfInitialize(20, 20);
-	if ((key == GLFW_KEY_ESCAPE || key == 'P') && action == GLFW_PRESS)
+	//Restart
+	if (key == 'R' && action == GLFW_PRESS)
+		hfInitialize(40, 40);
+	//Pause
+	if (key == 'P' && action == GLFW_PRESS)
 		pause = !pause;
+	//Wrapping
+	if (key == 'W' && action == GLFW_PRESS)
+		wrap = !wrap;
+	//Bloop
+	if (key == 'B' && action == GLFW_PRESS)
+		for (int x = 0; x < heightFieldWidth; x++) {
+			for (int z = 0; z < heightFieldDepth; z++) {
+				if ((x == heightFieldWidth/4 || 
+					x == heightFieldWidth*3/4 || 
+					z == heightFieldDepth/4 || 
+					z == heightFieldDepth*3/4) && 
+					x >= heightFieldWidth/4 && 
+					x <= heightFieldWidth*3/4 && 
+					z >= heightFieldDepth/4 && 
+					z <= heightFieldDepth*3/4)
+					u[x][z] += 5;
+			}
+		}
+	//Normalize
+	if (key == 'N' && action == GLFW_PRESS)
+		for (int x = 0; x < heightFieldWidth; x++) {
+			for (int z = 0; z < heightFieldDepth; z++) {
+				u[x][z] = v_tot / heightFieldWidth / heightFieldDepth;
+				v[x][z] = 0;
+			}
+		}
+	//Log camera position
+	if (key == 'C' && action == GLFW_PRESS) {
+		FILE *f = fopen("debug.log", "a");
+		if (f == NULL) {
+			return;
+		}
+		fprintf(f, "Camera position: (%f, %f, %f)\n\n", cameraAngles.x, cameraAngles.y, cameraAngles.z);
+		fclose(f);
+	}
 	else if(key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
 		shiftDown = true;
 	else if(key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE)
@@ -262,7 +368,7 @@ static void mousePos_callback(GLFWwindow* window, double xpos, double ypos) {
 // handle scroll events
 static void scroll_callback(GLFWwindow* window, double xOffset, double yOffset ) {
 	double totChgSq = yOffset;
-	cameraAngles.z += totChgSq*0.01f;
+	cameraAngles.z += totChgSq*0.1f;
 
 	if( cameraAngles.z <= 2.0f ) cameraAngles.z = 2.0f;
 	if( cameraAngles.z >= 50.0f ) cameraAngles.z = 50.0f;
@@ -531,7 +637,7 @@ void renderScene(GLFWwindow *window) {
 // program entry point
 int main( int argc, char *argv[] ) {
 	GLFWwindow *window = setupGLFW();	// setup GLFW and get our window
-	hfInitialize(20, 20);
+	hfInitialize(40, 40);
 	setupOpenGL();						// setup OpenGL & GLEW
 	setupShaders();						// load our shader programs, uniforms, and attribtues
 	setupBuffers();						// load our models into GPU memory
