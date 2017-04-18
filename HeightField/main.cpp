@@ -128,11 +128,16 @@ GLuint vaods[2];
 GLuint vaoHeightField;
 float *HeightFieldVertices;
 float **u, **v, *g;
-float v_tot, v_cur;
+float v_tot, v_cur, v_avg;
 int heightFieldWidth, heightFieldDepth;
-bool pause = true, wrap = false;
+bool pause = true,  // default to paused
+	 wrap = false,  // no wrap => clamp?
+	 clamp = true, // no clamp => ghost
+	 ghost = false;  // use g[] as ghost? (or avg)
 
+//width and height > 1
 void hfInitialize(int width, int depth) {
+	
 	heightFieldWidth = width;
 	heightFieldDepth = depth;
 
@@ -156,7 +161,7 @@ void hfInitialize(int width, int depth) {
 			// if (x < width/2 && z < depth/2) u[x][z] = 10;
 			// if (x > 9 && x < 12 && z > 9 && z < 12) u[x][z] = 20;
 			// else u[x][z] = 5;
-			u[x][z] = 10 + 5 * cos(2*M_PI*x/width) * sin(2*M_PI*z/depth);
+			u[x][z] = 10 + 5 * sin(2*M_PI*x/width) * sin(2*M_PI*z/depth);
 			
 			v[x][z] = 0;
 			
@@ -169,6 +174,8 @@ void hfInitialize(int width, int depth) {
 			HeightFieldVertices[vertArrayLoc + 2] = z;
 		}
 	}
+	
+	v_avg = v_tot / heightFieldWidth / heightFieldDepth;
 }
 
 /*
@@ -182,28 +189,41 @@ void hfUpdate() {
 		/*
 		 *	This is what g[] looks like around u[][]
 		 *	assuming x is cols and z is rows
-		 *	(I didn't really look to find that out)
+		 *	(I didn't really look to find that out but it shouldn't matter)
 		 *	w = width, d = depth
 		 *	--------------------------------------------
-		 *	             g[0]     ...     g[w-1]
+		 *	             g[0]    g[x]    g[w-1]
 		 *	          -----------------------------
 		 *	g[2w]     | (0,0)   (x,0)   (w-1,0)   | g[2w+d]
 		 *	          |  ...     ...     ...      |
-		 *	...	      | (0,z)   (x,z)   (w-1,z)   | ...
+		 *	g[z+2w]	  | (0,z)   (x,z)   (w-1,z)   | g[z+2w+d]
 		 *	          |  ...     ...     ...      |
 		 *	g[2w+d-1] | (0,d-1) (x,d-1) (w-1,d-1) | g[2w+2d-1]
 		 *	          -----------------------------
-		 *	             g[w]     ...     g[2w-1]
+		 *	             g[w]    g[x+w]  g[2w-1]
 		 *	--------------------------------------------
 		 */
+		
+		// //broken, Based on slope
+		// if (i < heightFieldWidth) {
+			// g[i] = 2*u[i][0] - u[i][1];
+		// } else if (i < 2*heightFieldWidth) {
+			// g[i] = 2*u[i-heightFieldWidth][heightFieldDepth-1] - u[i-heightFieldWidth][heightFieldDepth-2];
+		// } else if (i < 2*heightFieldWidth+heightFieldDepth) {
+			// g[i] = 2*u[0][i-2*heightFieldWidth] - u[1][i-2*heightFieldWidth];
+		// } else {
+			// g[i] = 2*u[heightFieldWidth-1][i-2*heightFieldWidth-heightFieldDepth] - u[heightFieldWidth-2][i-2*heightFieldWidth-heightFieldDepth];
+		// }
+		
+		//Based on adjacent, same as clamped boundaries
 		if (i < heightFieldWidth) {
-			g[i] = 2*u[i][0] - u[i][1];
+			g[i] = u[i][0];
 		} else if (i < 2*heightFieldWidth) {
-			g[i] = 2*u[i-heightFieldWidth][heightFieldDepth-1] - u[i-heightFieldWidth][heightFieldDepth-2];
+			g[i] = u[i-heightFieldWidth][heightFieldDepth-1];
 		} else if (i < 2*heightFieldWidth+heightFieldDepth) {
-			g[i] = 2*u[0][i-2*heightFieldWidth] - u[1][i-2*heightFieldWidth];
+			g[i] = u[0][i-2*heightFieldWidth];
 		} else {
-			g[i] = 2*u[heightFieldWidth-1][i-2*heightFieldWidth-heightFieldDepth] - u[heightFieldWidth-2][i-2*heightFieldWidth-heightFieldDepth];
+			g[i] = u[heightFieldWidth-1][i-2*heightFieldWidth-heightFieldDepth];
 		}
 	}
 	
@@ -213,28 +233,50 @@ void hfUpdate() {
 		for (int z = 0; z < heightFieldDepth; z++) {
 			if (wrap) {
 				//wrapping boundaries
-				v[x][z] += ((z-1 >= 0               ? u[x][z-1] : u[x][heightFieldDepth-1]) + 	// g[x];
-							(z+1 < heightFieldDepth ? u[x][z+1] : u[x][0]) +					// g[x+heightFieldWidth];
-							(x-1 >= 0               ? u[x-1][z] : u[heightFieldWidth-1][z]) + 	// g[z+2*heightFieldWidth];
-							(x+1 < heightFieldWidth ? u[x+1][z] : u[0][z])) / 4; 				// g[z+2*heightFieldWidth+heightFieldDepth];
+				v[x][z] += ((z-1 >= 0               ? u[x][z-1] : u[x][heightFieldDepth-1]) + 
+							(z+1 < heightFieldDepth ? u[x][z+1] : u[x][0]) + 
+							(x-1 >= 0               ? u[x-1][z] : u[heightFieldWidth-1][z]) + 
+							(x+1 < heightFieldWidth ? u[x+1][z] : u[0][z])) / 4;
 			} else {
-				//clamp boundaries
-				v[x][z] += ((z-1 >= 0               ? u[x][z-1] : u[x][0]) + 						// g[x];
-							(z+1 < heightFieldDepth ? u[x][z+1] : u[x][heightFieldDepth-1]) +		// g[x+heightFieldWidth];
-							(x-1 >= 0               ? u[x-1][z] : u[0][z]) + 						// g[z+2*heightFieldWidth];
-							(x+1 < heightFieldWidth ? u[x+1][z] : u[heightFieldWidth-1][z])) / 4; 	// g[z+2*heightFieldWidth+heightFieldDepth];
+				if (clamp) {
+					//clamping boundaries
+					v[x][z] += ((z-1 >= 0               ? u[x][z-1] : u[x][0]) + 
+								(z+1 < heightFieldDepth ? u[x][z+1] : u[x][heightFieldDepth-1]) + 
+								(x-1 >= 0               ? u[x-1][z] : u[0][z]) + 
+								(x+1 < heightFieldWidth ? u[x+1][z] : u[heightFieldWidth-1][z])) / 4;
+				}
+				else {
+					if (ghost) {
+						//reflecting boundaries using g[] as ghost
+						v[x][z] += ((z-1 >= 0               ? u[x][z-1] : g[x]) + 
+									(z+1 < heightFieldDepth ? u[x][z+1] : g[x+heightFieldWidth]) + 
+									(x-1 >= 0               ? u[x-1][z] : g[z+2*heightFieldWidth]) + 
+									(x+1 < heightFieldWidth ? u[x+1][z] : g[z+2*heightFieldWidth+heightFieldDepth])) / 4;
+					}
+					else {
+						//reflecting boundaries using average as ghost
+						v[x][z] += ((z-1 >= 0               ? u[x][z-1] : v_avg) + 
+									(z+1 < heightFieldDepth ? u[x][z+1] : v_avg) + 
+									(x-1 >= 0               ? u[x-1][z] : v_avg) + 
+									(x+1 < heightFieldWidth ? u[x+1][z] : v_avg)) / 4;
+					}
+				}
 			}
 			
 			v[x][z] -= u[x][z];
-			v[x][z] *= 0.666;	//Damping
+			//Damping
+			v[x][z] *= 0.666;
 			u[x][z] += v[x][z];
+			//Clamping
+			if (u[x][z] > 100) u[x][z] = 100;
+			if (u[x][z] < -100) u[x][z] = -100;
 			
 			v_cur += u[x][z];
 		}
 	}
 	
 	//Prevent addition or removal of water from the system
-	float v_dif = (v_tot - v_cur) / heightFieldWidth / heightFieldDepth;
+	float v_dif = v_avg - v_cur / heightFieldWidth / heightFieldDepth;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
 			u[x][z] += v_dif;
@@ -269,13 +311,19 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 	//Restart
 	if (key == 'R' && action == GLFW_PRESS)
-		hfInitialize(40, 40);
+		hfInitialize(heightFieldWidth, heightFieldDepth);
 	//Pause
 	if (key == 'P' && action == GLFW_PRESS)
 		pause = !pause;
 	//Wrapping
 	if (key == 'W' && action == GLFW_PRESS)
 		wrap = !wrap;
+	//Clamping
+	if (key == 'C' && action == GLFW_PRESS)
+		clamp = !clamp;
+	//Ghost type
+	if (key == 'G' && action == GLFW_PRESS)
+		ghost = !ghost;
 	//Bloop
 	if (key == 'B' && action == GLFW_PRESS)
 		for (int x = 0; x < heightFieldWidth; x++) {
@@ -299,13 +347,49 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 				v[x][z] = 0;
 			}
 		}
-	//Log camera position
-	if (key == 'C' && action == GLFW_PRESS) {
-		FILE *f = fopen("debug.log", "a");
+	//Log debug to file
+	if (key == 'D' && action == GLFW_PRESS) {
+		FILE *f = NULL;
+		if (shiftDown) f = fopen("debug.log", "a");
+		else f = fopen("debug.log", "w");
 		if (f == NULL) {
+			fprintf(stderr, "[ERROR]: cannot open file debug.log to write");
 			return;
 		}
-		fprintf(f, "Camera position: (%f, %f, %f)\n\n", cameraAngles.x, cameraAngles.y, cameraAngles.z);
+		fprintf(f, " -- g[] -- \n");
+		fprintf(f, " - top - \n");
+		for (int i = 0; i < heightFieldWidth; i++) {
+			if (i == 0) fprintf(f, "%f", g[i]);
+			else fprintf(f, ", %f", g[i]);
+		}
+		fprintf(f, "\n - bottom - \n");
+		for (int i = heightFieldWidth; i < 2*heightFieldWidth; i++) {
+			if (i == heightFieldWidth) fprintf(f, "%f", g[i]);
+			else fprintf(f, ", %f", g[i]);
+		}
+		fprintf(f, "\n - left - \n");
+		for (int i = 2*heightFieldWidth; i < 2*heightFieldWidth+heightFieldDepth; i++) {
+			if (i == 2*heightFieldWidth) fprintf(f, "%f", g[i]);
+			else fprintf(f, ", %f", g[i]);
+		}
+		fprintf(f, "\n - right - \n");
+		for (int i = 2*heightFieldWidth+heightFieldDepth; i < 2*heightFieldWidth+2*heightFieldDepth; i++) {
+			if (i == 2*heightFieldWidth+heightFieldDepth) fprintf(f, "%f", g[i]);
+			else fprintf(f, ", %f", g[i]);
+		}
+		fprintf(f, "\n\n ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \n\n");
+		fprintf(f, " -- u[][] -- ");
+		for (int x = 0; x < heightFieldWidth; x++) {
+			fprintf(f, "\n - x = %d\n", x);
+			for (int z = 0; z < heightFieldDepth; z++) {
+				if (z == 0) fprintf(f, "%f", u[x][z]);
+				else fprintf(f, ", %f", u[x][z]);
+			}
+		}
+		fprintf(f, "\n\n ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \n\n");
+		fprintf(f, " -- Camera Position -- \n");
+		fprintf(f, "(%f, %f, %f)", cameraAngles.x, cameraAngles.y, cameraAngles.z);
+		fprintf(f, "\n\n ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \n\n");
 		fclose(f);
 	}
 	else if(key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS)
