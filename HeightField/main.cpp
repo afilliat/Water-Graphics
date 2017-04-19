@@ -99,22 +99,22 @@ struct PointAttributeLocations {
 int windowWidth, windowHeight;
 bool shiftDown = false;
 bool leftMouseDown = false;
-glm::vec2 mousePosition( -9999.0f, -9999.0f );
+glm::vec2 mousePosition(-9999.0f, -9999.0f);
 
-glm::vec3 cameraAngles( -0.5f, 2.0f, 30.0f );
-glm::vec3 eyePoint(   10.0f, 10.0f, 10.0f );
-glm::vec3 lookAtPoint( 0.0f,  0.0f,  0.0f );
-glm::vec3 upVector(    0.0f,  1.0f,  0.0f );
+glm::vec3 cameraAngles(-0.4f, 2.25f, 30.0f);
+glm::vec3 eyePoint(10.0f, 10.0f, 10.0f);
+glm::vec3 lookAtPoint(0.0f, 0.0f, 0.0f);
+glm::vec3 upVector(0.0f, 1.0f, 0.0f);
 
-glm::vec3 materialKa( 0.0215, 0.0215, 0.3745 );
-glm::vec3 materialKd( 0.07568, 0.07568, 0.81424 );
-glm::vec3 materialKs( 0.333, 0.333, 0.467811 );
+glm::vec3 materialKa(0.0215, 0.0215, 0.3745);
+glm::vec3 materialKd(0.07568, 0.07568, 0.81424);
+glm::vec3 materialKs(0.333, 0.333, 0.467811);
 float materialShininess = 0.6*128;
 
-glm::vec3 lightPosition( 3, 5, 3 );
-glm::vec3 lightLd( 1, 1, 1 );
-glm::vec3 lightLa( 1, 1, 1 );
-glm::vec3 lightLs( 1, 1, 1 );
+glm::vec3 lightPosition(3, 5, 3);
+glm::vec3 lightLd(1, 1, 1);
+glm::vec3 lightLa(1, 1, 1);
+glm::vec3 lightLs(1, 1, 1);
 
 CSCI441::ShaderProgram *blinnPhongShaderProgram = NULL;
 CSCI441::ShaderProgram *pointShaderProgram = NULL;
@@ -129,15 +129,16 @@ GLuint vaoHeightField;
 float *HeightFieldVertices;
 float **u, **v, *g;
 float v_tot, v_cur, v_avg;
+float time = 0.0;
 int heightFieldWidth, heightFieldDepth;
-bool pause = true,  // default to paused
-	 wrap = false,  // no wrap => clamp?
-	 clamp = true, // no clamp => ghost
-	 ghost = false;  // use g[] as ghost? (or avg)
+bool pause   = true,	// default to paused
+	 pausing = false,	// pause after 1 tick
+	 wrap    = false,	// no wrap => clamp?
+	 clamp   = true,	// no clamp => ghost			// this is probably the best option as of now
+	 ghost   = false;	// use g[] as ghost? (or avg)
 
 //width and height > 1
 void hfInitialize(int width, int depth) {
-	
 	heightFieldWidth = width;
 	heightFieldDepth = depth;
 
@@ -153,15 +154,17 @@ void hfInitialize(int width, int depth) {
 	
 	//Initialize arrays
 	v_tot = 0;
+	srand(floor(time));
 	for (int x = 0; x < width; x++) {
 		u[x] = new float[depth];
 		v[x] = new float[depth];
 		for (int z = 0; z < depth; z++) {
+			if (x < width/2 && z < depth/2) u[x][z] = 15;
+			else if (x >= width/2 && z >= depth/2) u[x][z] = 15;
+			else u[x][z] = 5;
 			
-			// if (x < width/2 && z < depth/2) u[x][z] = 10;
-			// if (x > 9 && x < 12 && z > 9 && z < 12) u[x][z] = 20;
-			// else u[x][z] = 5;
-			u[x][z] = 10 + 5 * sin(2*M_PI*x/width) * sin(2*M_PI*z/depth);
+			// u[x][z] = 10 + 5 * cosf(2*M_PI*x/width) * sinf(2*M_PI*z/depth);
+			// u[x][z] = 5 + rand() % 10;
 			
 			v[x][z] = 0;
 			
@@ -173,6 +176,18 @@ void hfInitialize(int width, int depth) {
 			HeightFieldVertices[vertArrayLoc + 1] = u[x][z];
 			HeightFieldVertices[vertArrayLoc + 2] = z;
 		}
+	}
+	
+	if (ghost) {
+		//hack to fix broken ghost boundary
+		float c_avg = (u[0][0] + 
+			u[0][depth-1] + 
+			u[width-1][0] + 
+			u[width-1][depth-1]) / 4;
+		u[0][0] = c_avg;
+		u[0][depth-1] = c_avg;
+		u[width-1][0] = c_avg;
+		u[width-1][depth-1] = c_avg;
 	}
 	
 	v_avg = v_tot / heightFieldWidth / heightFieldDepth;
@@ -204,31 +219,20 @@ void hfUpdate() {
 		 *	--------------------------------------------
 		 */
 		
-		// //broken, Based on slope
-		// if (i < heightFieldWidth) {
-			// g[i] = 2*u[i][0] - u[i][1];
-		// } else if (i < 2*heightFieldWidth) {
-			// g[i] = 2*u[i-heightFieldWidth][heightFieldDepth-1] - u[i-heightFieldWidth][heightFieldDepth-2];
-		// } else if (i < 2*heightFieldWidth+heightFieldDepth) {
-			// g[i] = 2*u[0][i-2*heightFieldWidth] - u[1][i-2*heightFieldWidth];
-		// } else {
-			// g[i] = 2*u[heightFieldWidth-1][i-2*heightFieldWidth-heightFieldDepth] - u[heightFieldWidth-2][i-2*heightFieldWidth-heightFieldDepth];
-		// }
-		
-		//Based on adjacent, same as clamped boundaries
+		//broken if corners start with different heights, Based on slope
 		if (i < heightFieldWidth) {
-			g[i] = u[i][0];
+			g[i] = 2*u[i][0] - u[i][1];
 		} else if (i < 2*heightFieldWidth) {
-			g[i] = u[i-heightFieldWidth][heightFieldDepth-1];
+			g[i] = 2*u[i-heightFieldWidth][heightFieldDepth-1] - u[i-heightFieldWidth][heightFieldDepth-2];
 		} else if (i < 2*heightFieldWidth+heightFieldDepth) {
-			g[i] = u[0][i-2*heightFieldWidth];
+			g[i] = 2*u[0][i-2*heightFieldWidth] - u[1][i-2*heightFieldWidth];
 		} else {
-			g[i] = u[heightFieldWidth-1][i-2*heightFieldWidth-heightFieldDepth];
+			g[i] = 2*u[heightFieldWidth-1][i-2*heightFieldWidth-heightFieldDepth] - u[heightFieldWidth-2][i-2*heightFieldWidth-heightFieldDepth];
 		}
 	}
 	
-	//Update visible
-	v_cur = 0;
+	//Update velocity of columns
+	float damping = 0.9;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
 			if (wrap) {
@@ -264,8 +268,14 @@ void hfUpdate() {
 			}
 			
 			v[x][z] -= u[x][z];
-			//Damping
-			v[x][z] *= 0.666;
+			v[x][z] *= damping;
+		}
+	}
+	
+	//Update heights
+	v_cur = 0;
+	for (int x = 0; x < heightFieldWidth; x++) {
+		for (int z = 0; z < heightFieldDepth; z++) {
 			u[x][z] += v[x][z];
 			//Clamping
 			if (u[x][z] > 100) u[x][z] = 100;
@@ -274,7 +284,7 @@ void hfUpdate() {
 			v_cur += u[x][z];
 		}
 	}
-	
+
 	//Prevent addition or removal of water from the system
 	float v_dif = v_avg - v_cur / heightFieldWidth / heightFieldDepth;
 	for (int x = 0; x < heightFieldWidth; x++) {
@@ -283,6 +293,8 @@ void hfUpdate() {
 			HeightFieldVertices[(x + z * heightFieldWidth) * 3 + 1] = u[x][z];
 		}
 	}
+	
+	if (pausing) pause = true;
 }
 
 //*************************************************************************************
@@ -313,8 +325,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == 'R' && action == GLFW_PRESS)
 		hfInitialize(heightFieldWidth, heightFieldDepth);
 	//Pause
-	if (key == 'P' && action == GLFW_PRESS)
-		pause = !pause;
+	if (key == 'P' && action == GLFW_PRESS) {
+		if (shiftDown) pausing = !pausing;
+		else pause = !pause;
+	}
 	//Wrapping
 	if (key == 'W' && action == GLFW_PRESS)
 		wrap = !wrap;
@@ -337,6 +351,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 					z >= heightFieldDepth/4 && 
 					z <= heightFieldDepth*3/4)
 					u[x][z] += 5;
+				HeightFieldVertices[(x + z * heightFieldWidth) * 3 + 1] = u[x][z];
 			}
 		}
 	//Normalize
@@ -345,6 +360,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			for (int z = 0; z < heightFieldDepth; z++) {
 				u[x][z] = v_tot / heightFieldWidth / heightFieldDepth;
 				v[x][z] = 0;
+				HeightFieldVertices[(x + z * heightFieldWidth) * 3 + 1] = u[x][z];
 			}
 		}
 	//Log debug to file
@@ -387,6 +403,15 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			}
 		}
 		fprintf(f, "\n\n ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \n\n");
+		fprintf(f, " -- v[][] -- ");
+		for (int x = 0; x < heightFieldWidth; x++) {
+			fprintf(f, "\n - x = %d\n", x);
+			for (int z = 0; z < heightFieldDepth; z++) {
+				if (z == 0) fprintf(f, "%f", v[x][z]);
+				else fprintf(f, ", %f", v[x][z]);
+			}
+		}
+		fprintf(f, "\n\n ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \n\n");
 		fprintf(f, " -- Camera Position -- \n");
 		fprintf(f, "(%f, %f, %f)", cameraAngles.x, cameraAngles.y, cameraAngles.z);
 		fprintf(f, "\n\n ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- \n\n");
@@ -396,6 +421,14 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		shiftDown = true;
 	else if(key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE)
 		shiftDown = false;
+	
+	char txt[50] = "Height Fields (";
+	if (wrap) strcat(txt, " w ");
+	if (clamp) strcat(txt, " c ");
+	if (ghost) strcat(txt, " g ");
+	if (pausing) strcat(txt, " p ");
+	strcat(txt, ")");
+	glfwSetWindowTitle(window, txt);
 }
 
 // handle mouse clicks
@@ -432,7 +465,7 @@ static void mousePos_callback(GLFWwindow* window, double xpos, double ypos) {
 						cameraAngles.z += totChgSq*0.01f;
 
 						if( cameraAngles.z <= 2.0f ) cameraAngles.z = 2.0f;
-						if( cameraAngles.z >= 50.0f ) cameraAngles.z = 50.0f;
+						if( cameraAngles.z >= 70.0f ) cameraAngles.z = 70.0f;
 					}
 					convertSphericalToCartesian();
 
@@ -455,7 +488,7 @@ static void scroll_callback(GLFWwindow* window, double xOffset, double yOffset )
 	cameraAngles.z += totChgSq*0.1f;
 
 	if( cameraAngles.z <= 2.0f ) cameraAngles.z = 2.0f;
-	if( cameraAngles.z >= 50.0f ) cameraAngles.z = 50.0f;
+	if( cameraAngles.z >= 70.0f ) cameraAngles.z = 70.0f;
 	
 	convertSphericalToCartesian();
 }
@@ -479,7 +512,7 @@ GLFWwindow* setupGLFW() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-	GLFWwindow *window = glfwCreateWindow(640, 480, "A1 Solution", NULL, NULL);
+	GLFWwindow *window = glfwCreateWindow(1280, 720, "Height Fields", NULL, NULL);
 	if( !window ) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
@@ -624,7 +657,7 @@ void setupBuffers() {
 
 // handles drawing everything to our buffer
 void renderScene(GLFWwindow *window) {
-	float time = glfwGetTime();
+	time = glfwGetTime();
 
 	// query our current window size, determine the aspect ratio, and set our viewport size
 	float ratio;
@@ -721,7 +754,7 @@ void renderScene(GLFWwindow *window) {
 // program entry point
 int main( int argc, char *argv[] ) {
 	GLFWwindow *window = setupGLFW();	// setup GLFW and get our window
-	hfInitialize(40, 40);
+	hfInitialize(20, 20);
 	setupOpenGL();						// setup OpenGL & GLEW
 	setupShaders();						// load our shader programs, uniforms, and attribtues
 	setupBuffers();						// load our models into GPU memory
