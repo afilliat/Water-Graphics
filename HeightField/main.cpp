@@ -131,6 +131,9 @@ float **u, **v, *g;
 float v_tot, v_cur, v_avg;
 float time = 0.0;
 int heightFieldWidth, heightFieldDepth;
+
+// C is wave speed, timeStep is self explanatory, h is the relative width of a column to wave speed
+float c = 23, timeStep = 1.0 / 60.0, h = 1;
 bool pause   = true,	// default to paused
 	 pausing = false,	// pause after 1 tick
 	 wrap    = false,	// no wrap => clamp?
@@ -163,7 +166,7 @@ void hfInitialize(int width, int depth) {
 			else if (x >= width/2 && z >= depth/2) u[x][z] = 15;
 			else u[x][z] = 5;
 			
-			// u[x][z] = 10 + 5 * cosf(2*M_PI*x/width) * sinf(2*M_PI*z/depth);
+			//u[x][z] = 10 + 5 * cosf(2*M_PI*x/width) * sinf(2*M_PI*z/depth);
 			// u[x][z] = 5 + rand() % 10;
 			
 			v[x][z] = 0;
@@ -177,7 +180,7 @@ void hfInitialize(int width, int depth) {
 			HeightFieldVertices[vertArrayLoc + 2] = z;
 		}
 	}
-	
+	/*
 	if (ghost) {
 		//hack to fix broken ghost boundary
 		float c_avg = (u[0][0] + 
@@ -189,6 +192,7 @@ void hfInitialize(int width, int depth) {
 		u[width-1][0] = c_avg;
 		u[width-1][depth-1] = c_avg;
 	}
+	*/
 	
 	v_avg = v_tot / heightFieldWidth / heightFieldDepth;
 }
@@ -199,6 +203,8 @@ void hfInitialize(int width, int depth) {
  * with ghost boundaries for reflection
  */
 void hfUpdate() {
+
+	
 	//Update ghost boundaries
 	for (int i = 0; i < 2*heightFieldWidth+2*heightFieldDepth; i++) {
 		/*
@@ -232,42 +238,41 @@ void hfUpdate() {
 	}
 	
 	//Update velocity of columns
-	float damping = 0.9;
+	float damping = 0.99;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
+			float force = 0;
 			if (wrap) {
 				//wrapping boundaries
-				v[x][z] += ((z-1 >= 0               ? u[x][z-1] : u[x][heightFieldDepth-1]) + 
-							(z+1 < heightFieldDepth ? u[x][z+1] : u[x][0]) + 
-							(x-1 >= 0               ? u[x-1][z] : u[heightFieldWidth-1][z]) + 
-							(x+1 < heightFieldWidth ? u[x+1][z] : u[0][z])) / 4;
-			} else {
-				if (clamp) {
-					//clamping boundaries
-					v[x][z] += ((z-1 >= 0               ? u[x][z-1] : u[x][0]) + 
-								(z+1 < heightFieldDepth ? u[x][z+1] : u[x][heightFieldDepth-1]) + 
-								(x-1 >= 0               ? u[x-1][z] : u[0][z]) + 
-								(x+1 < heightFieldWidth ? u[x+1][z] : u[heightFieldWidth-1][z])) / 4;
-				}
-				else {
-					if (ghost) {
-						//reflecting boundaries using g[] as ghost
-						v[x][z] += ((z-1 >= 0               ? u[x][z-1] : g[x]) + 
-									(z+1 < heightFieldDepth ? u[x][z+1] : g[x+heightFieldWidth]) + 
-									(x-1 >= 0               ? u[x-1][z] : g[z+2*heightFieldWidth]) + 
-									(x+1 < heightFieldWidth ? u[x+1][z] : g[z+2*heightFieldWidth+heightFieldDepth])) / 4;
-					}
-					else {
-						//reflecting boundaries using average as ghost
-						v[x][z] += ((z-1 >= 0               ? u[x][z-1] : v_avg) + 
-									(z+1 < heightFieldDepth ? u[x][z+1] : v_avg) + 
-									(x-1 >= 0               ? u[x-1][z] : v_avg) + 
-									(x+1 < heightFieldWidth ? u[x+1][z] : v_avg)) / 4;
-					}
-				}
+				force += ((z - 1 >= 0 ? u[x][z - 1] : u[x][heightFieldDepth - 1]) +
+					(z + 1 < heightFieldDepth ? u[x][z + 1] : u[x][0]) +
+					(x - 1 >= 0 ? u[x - 1][z] : u[heightFieldWidth - 1][z]) +
+					(x + 1 < heightFieldWidth ? u[x + 1][z] : u[0][z]));
 			}
-			
-			v[x][z] -= u[x][z];
+			else if (clamp) {
+				//clamping boundaries
+				force += ((z - 1 >= 0 ? u[x][z - 1] : u[x][0]) +
+					(z + 1 < heightFieldDepth ? u[x][z + 1] : u[x][heightFieldDepth - 1]) +
+					(x - 1 >= 0 ? u[x - 1][z] : u[0][z]) +
+					(x + 1 < heightFieldWidth ? u[x + 1][z] : u[heightFieldWidth - 1][z]));
+			}
+			else if (ghost) {
+				//reflecting boundaries using g[] as ghost
+				force += ((z - 1 >= 0 ? u[x][z - 1] : g[x]) +
+					(z + 1 < heightFieldDepth ? u[x][z + 1] : g[x + heightFieldWidth]) +
+					(x - 1 >= 0 ? u[x - 1][z] : g[z + 2 * heightFieldWidth]) +
+					(x + 1 < heightFieldWidth ? u[x + 1][z] : g[z + 2 * heightFieldWidth + heightFieldDepth]));
+			}
+			else {
+				//reflecting boundaries using average as ghost
+				force += ((z - 1 >= 0 ? u[x][z - 1] : v_avg) +
+					(z + 1 < heightFieldDepth ? u[x][z + 1] : v_avg) +
+					(x - 1 >= 0 ? u[x - 1][z] : v_avg) +
+					(x + 1 < heightFieldWidth ? u[x + 1][z] : v_avg));
+			}
+			force -= 4 * u[x][z];
+			force *= c*c/(h*h);
+			v[x][z] += force*timeStep;
 			v[x][z] *= damping;
 		}
 	}
@@ -276,7 +281,7 @@ void hfUpdate() {
 	v_cur = 0;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
-			u[x][z] += v[x][z];
+			u[x][z] += v[x][z]*timeStep;
 			//Clamping
 			if (u[x][z] > 100) u[x][z] = 100;
 			if (u[x][z] < -100) u[x][z] = -100;
@@ -286,10 +291,11 @@ void hfUpdate() {
 	}
 
 	//Prevent addition or removal of water from the system
+	//Transfer data to GPU array
 	float v_dif = v_avg - v_cur / heightFieldWidth / heightFieldDepth;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
-			u[x][z] += v_dif;
+			//u[x][z] += v_dif;
 			HeightFieldVertices[(x + z * heightFieldWidth) * 3 + 1] = u[x][z];
 		}
 	}
@@ -657,6 +663,8 @@ void setupBuffers() {
 
 // handles drawing everything to our buffer
 void renderScene(GLFWwindow *window) {
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 	time = glfwGetTime();
 
 	// query our current window size, determine the aspect ratio, and set our viewport size
@@ -669,7 +677,7 @@ void renderScene(GLFWwindow *window) {
 	glm::mat4 mMtx, vMtx, pMtx;
 
 	// compute our projection matrix
-	pMtx = glm::perspective(45.0f, ratio, 0.001f, 100.0f);
+	pMtx = glm::perspective(45.0f, ratio, 0.001f, 1000.0f);
 	// compute our view matrix based on our current camera setup
 	vMtx = glm::lookAt(eyePoint, lookAtPoint, upVector);
 
@@ -754,7 +762,7 @@ void renderScene(GLFWwindow *window) {
 // program entry point
 int main( int argc, char *argv[] ) {
 	GLFWwindow *window = setupGLFW();	// setup GLFW and get our window
-	hfInitialize(20, 20);
+	hfInitialize(200, 200);
 	setupOpenGL();						// setup OpenGL & GLEW
 	setupShaders();						// load our shader programs, uniforms, and attribtues
 	setupBuffers();						// load our models into GPU memory
