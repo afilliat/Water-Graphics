@@ -31,8 +31,8 @@ void main() {
 	bottomPosition.y = 0;
 	
 	//Simple Shifts for boxes
-	vec4 shiftX = vec4(1, 0, 0, 0);
-	vec4 shiftZ = vec4(0, 0, 1, 0);
+	vec4 shiftX = vec4(0.9, 0, 0, 0);
+	vec4 shiftZ = vec4(0, 0, 0.9, 0);
 	
 	//Top
 	vec4 position = originPosition;

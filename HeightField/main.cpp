@@ -43,6 +43,54 @@ struct Vertex {
 	float nx, ny, nz;
 };
 
+// specify our Cube Vertex information
+const Vertex cubeVertices[] = {
+	// near
+	{ -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f }, // 0 - bln
+	{ 0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f }, // 1 - brn
+	{ 0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f }, // 2 - trn
+	{ -0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f }, // 3 - tln
+
+												// back
+	{ -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f }, // 4 - blf
+	{ 0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f }, // 5 - brf
+	{ 0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f }, // 6 - trf
+	{ -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f }, // 7 - tlf
+
+											   // right
+	{ 0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f }, // 8 - brn
+	{ 0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f }, // 9 - trn
+	{ 0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f }, // 10 - brf
+	{ 0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f }, // 11 - trf
+
+											  // top
+	{ 0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f }, // 12 - trn
+	{ -0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f }, // 13 - tlf
+	{ 0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f }, // 14 - trf
+	{ -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f }, // 15 - tln
+
+											   // bottom
+	{ -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f }, // 16 - bln
+	{ 0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f }, // 17 - brn
+	{ -0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f }, // 18 - blf
+	{ 0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f }, // 19 - brf
+
+											   // left
+	{ -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f }, // 20 - bln
+	{ -0.5f, -0.5f,  0.5f, -1.0f, 0.0f, 0.0f }, // 21 - blf
+	{ -0.5f,  0.5f, -0.5f, -1.0f, 0.0f, 0.0f }, // 22 - tln
+	{ -0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f }  // 23 - tlf
+};
+// specify our Cube Index Ordering
+const unsigned short cubeIndices[] = {
+	0, 2, 1,   0, 3, 2, // near
+	8, 9,10,  10, 9,11, // right
+	12,13,14,  15,13,12, // top
+	16,17,18,  17,19,18, // bottom
+	4, 5, 6,   4, 6, 7, // back
+	20,21,22,  21,23,22  // left
+};
+
 // specify our Ground Vertex Information
 const Vertex groundVertices[] = {
 		{ -15.0f, -5.0f, -15.0f, 0.0f, 1.0f, 0.0f }, // 0 - BL
@@ -127,10 +175,19 @@ GLuint vaods[2];
 //**************************************** Height Field ********************************
 GLuint vaoHeightField;
 float *HeightFieldVertices;
-float **u, **v, *g;
+float **u, **v, **r, **rNew, *g;
 float v_tot, v_cur, v_avg;
 float time = 0.0;
 int heightFieldWidth, heightFieldDepth;
+
+//Location and size of a unit cube centered at location
+glm::vec3 cubeSize(1.9, 1.9, 1.9);
+glm::vec3 cubeLoc(10, 20, 10);
+glm::vec3 cubeVelocity(0.0, 0.0, 0.0);
+//unit is meter cube is wood
+double cubeMass = 4080;
+double gravity = 9.8;
+double fluidDensity = 1000;
 
 // C is wave speed, timeStep is self explanatory, h is the relative width of a column to wave speed
 float c = 23, timeStep = 1.0 / 60.0, h = 1;
@@ -153,6 +210,8 @@ void hfInitialize(int width, int depth) {
 	//Declare arrays
 	u = new float*[width];
 	v = new float*[width];
+	r = new float*[width];
+	rNew = new float*[width];
 	g = new float[2*width+2*depth];	//don't need corners
 	
 	//Initialize arrays
@@ -161,15 +220,19 @@ void hfInitialize(int width, int depth) {
 	for (int x = 0; x < width; x++) {
 		u[x] = new float[depth];
 		v[x] = new float[depth];
+		r[x] = new float[depth];
+		rNew[x] = new float[depth];
 		for (int z = 0; z < depth; z++) {
 			if (x < width/2 && z < depth/2) u[x][z] = 15;
 			else if (x >= width/2 && z >= depth/2) u[x][z] = 15;
 			else u[x][z] = 5;
-			
-			//u[x][z] = 10 + 5 * cosf(2*M_PI*x/width) * sinf(2*M_PI*z/depth);
+			//u[x][z] = 0;
+			//u[x][z] = 10 + 15 * cosf(8*M_PI*x/width) * sinf(8*M_PI*z/depth);
 			// u[x][z] = 5 + rand() % 10;
 			
 			v[x][z] = 0;
+			r[x][z] = 0;
+			rNew[x][z] = 0;
 			
 			v_tot += u[x][z];
 
@@ -276,6 +339,60 @@ void hfUpdate() {
 			v[x][z] *= damping;
 		}
 	}
+
+
+	//IMPORTANT:  ONLY WORKS WITH CUBES AND DOESN'T CHECK EDGE CONDITIONS
+	//Updates r, object, and u relative to object
+
+	//Amount of water displaced
+	float displacement = 0.0;
+	
+	//difference in r
+	float difference = 0.0;
+
+
+	//Finds the corners of my cube in heightfield indices
+	int bottom = floor(cubeLoc.z - cubeSize.z / 2);
+	int top = floor(cubeLoc.z + cubeSize.z / 2);
+	int left = floor(cubeLoc.x - cubeSize.x / 2);
+	int right = floor(cubeLoc.x + cubeSize.x / 2);
+
+	//Updates rNew and calculates displacement;
+	for (int x = left; x <= right; x++) {
+		for (int z = bottom; z <= top; z++) {
+			//Calculates current column displacement, clamping between zero and cube height
+			float newDisp = u[x][z] - (cubeLoc.y - cubeSize.y / 2);
+			newDisp = newDisp >= 0.0 ? newDisp : 0.0;
+			newDisp = newDisp <= cubeSize.y ? newDisp : cubeSize.y;
+			
+			//Updates displacement, difference and r
+			displacement += newDisp;
+			difference += newDisp - r[x][z];
+			r[x][z] = newDisp;
+
+			//Attempt to fix feedback loop issue
+			if (cubeLoc.y - cubeSize.y / 2 < u[x][z])
+				u[x][z] = cubeLoc.y;
+			
+		}
+	}
+
+	//Update u with difference, add around shape perimeter
+	float added = difference / (2 * (top - bottom + right - left));
+	for (int x = left; x <= right; x++) {
+		u[x][bottom - 1] += added;
+		u[x][top + 1] += added;
+	}
+	for (int y = bottom; y <= top; y++) {
+		u[left - 1][y] += added;
+		u[right - 1][y] += added;
+	}
+
+	//Move cube
+	cubeVelocity.y += (-gravity + fluidDensity*gravity*displacement / cubeMass)*timeStep;
+	cubeVelocity *= 0.99;
+	cubeLoc += cubeVelocity*timeStep;
+
 	
 	//Update heights
 	v_cur = 0;
@@ -295,7 +412,7 @@ void hfUpdate() {
 	float v_dif = v_avg - v_cur / heightFieldWidth / heightFieldDepth;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
-			//u[x][z] += v_dif;
+			u[x][z] += v_dif;
 			HeightFieldVertices[(x + z * heightFieldWidth) * 3 + 1] = u[x][z];
 		}
 	}
@@ -334,6 +451,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == 'P' && action == GLFW_PRESS) {
 		if (shiftDown) pausing = !pausing;
 		else pause = !pause;
+	}
+	if (key == 'O' && action == GLFW_PRESS) {
+		cubeLoc.y = 20;
+		cubeVelocity.y = 0;
 	}
 	//Wrapping
 	if (key == 'W' && action == GLFW_PRESS)
@@ -471,7 +592,7 @@ static void mousePos_callback(GLFWwindow* window, double xpos, double ypos) {
 						cameraAngles.z += totChgSq*0.01f;
 
 						if( cameraAngles.z <= 2.0f ) cameraAngles.z = 2.0f;
-						if( cameraAngles.z >= 70.0f ) cameraAngles.z = 70.0f;
+						if( cameraAngles.z >= 210.0f ) cameraAngles.z = 210.0f;
 					}
 					convertSphericalToCartesian();
 
@@ -611,6 +732,35 @@ void setupBuffers() {
 	// will be used to stroe VBO descriptors for ARRAY_BUFFER and ELEMENT_ARRAY_BUFFER
 	GLuint vbods[2];
 
+	//------------ BEGIN CUBE VAO ------------
+
+	// bind our Cube VAO
+	glBindVertexArray(vaods[CUBE]);
+
+	// generate our vertex buffer object descriptors for the CUBE
+	glGenBuffers(2, vbods);
+	// bind the VBO for our Cube Array Buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vbods[0]);
+	// send the data to the GPU
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+
+	// bind the VBO for our Cube Element Array Buffer
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbods[1]);
+	// send the data to the GPU
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), cubeIndices, GL_STATIC_DRAW);
+
+	// enable our position attribute
+	glEnableVertexAttribArray(bpAttribLocs.position);
+	// map the position attribute to data within our buffer
+	glVertexAttribPointer(bpAttribLocs.position, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)0);
+
+	// enable our normal attribute
+	glEnableVertexAttribArray(bpAttribLocs.normal);
+	// map the normal attribute to data within our buffer
+	glVertexAttribPointer(bpAttribLocs.normal, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(3 * sizeof(float)));
+
+	//------------  END  CUBE VAO ------------
+
 	//------------ BEGIN GROUND VAO ------------
 
 	// Draw Ground
@@ -691,6 +841,12 @@ void renderScene(GLFWwindow *window) {
 	// use our Blinn-Phone Shading Program
 	blinnPhongShaderProgram->useProgram();
 
+	//Set color
+	materialKa = glm::vec3(0.2745, 0.01175, 0.01175);
+	materialKd = glm::vec3(0.81424, 0.04136, 0.04136);
+	materialKs = glm::vec3(0.927811, 0.626959, 0.626959);
+	materialShininess = 0.6 * 128;
+
 	// set all the dynamic uniform values
 	glUniformMatrix4fv(bpUniformLocs.modelviewMatrix, 1, GL_FALSE, &mvMtx[0][0]);
 	glUniformMatrix4fv(bpUniformLocs.mvpMatrix, 1, GL_FALSE, &mvpMtx[0][0]);
@@ -709,6 +865,11 @@ void renderScene(GLFWwindow *window) {
 	// draw our ground!
 	//glDrawElements(GL_TRIANGLES, sizeof(groundIndices) / sizeof(unsigned short), GL_UNSIGNED_SHORT, (void*)0);
 
+	glm::mat4 model = mMtx;
+
+	mMtx = glm::translate(mMtx, cubeLoc);
+	mMtx = glm::scale(mMtx, cubeSize);
+
 	// update our modelview matrix
 	mvMtx = vMtx * mMtx;
 	// update our modelviewprojection matrix
@@ -721,14 +882,25 @@ void renderScene(GLFWwindow *window) {
 	glUniformMatrix4fv(bpUniformLocs.mvpMatrix, 1, GL_FALSE, &mvpMtx[0][0]);
 	glUniformMatrix3fv(bpUniformLocs.normalMatrix, 1, GL_FALSE, &nMtx[0][0]);
 
+	// bind our Cube VAO
+	glBindVertexArray(vaods[CUBE]);
+	// draw our cube!
+	glDrawElements(GL_TRIANGLES, sizeof(cubeIndices) / sizeof(unsigned short), GL_UNSIGNED_SHORT, (void*)0);
+
+	mMtx = model;
 
 	//Draw Height Field
 	glBindVertexArray(vaoHeightField);
 
+	materialKa = glm::vec3(0.0215, 0.0215, 0.3745);
+	materialKd = glm::vec3(0.07568, 0.07568, 0.81424);
+	materialKs = glm::vec3(0.333, 0.333, 0.467811);
+	materialShininess = 0.6 * 128;
+
 	//Select Shader
 	pointShaderProgram->useProgram();
 
-	mMtx = glm::translate(mMtx, glm::vec3(-10, -10, -10));
+	//mMtx = glm::translate(mMtx, glm::vec3(-10, -10, -10));
 	// update our modelview matrix
 	mvMtx = vMtx * mMtx;
 	// update our modelviewprojection matrix
