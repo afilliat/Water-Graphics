@@ -92,11 +92,11 @@ const unsigned short cubeIndices[] = {
 };
 
 // specify our Ground Vertex Information
-const Vertex groundVertices[] = {
-		{ -15.0f, -5.0f, -15.0f, 0.0f, 1.0f, 0.0f }, // 0 - BL
-		{  15.0f, -5.0f, -15.0f, 0.0f, 1.0f, 0.0f }, // 1 - BR
-		{  15.0f, -5.0f,  15.0f, 0.0f, 1.0f, 0.0f }, // 2 - TR
-		{ -15.0f, -5.0f,  15.0f, 0.0f, 1.0f, 0.0f }  // 3 - TL
+Vertex groundVertices[] = {
+		{ 0.0f,	 -0.1f, 0.0f,	0.0f, 1.0f, 0.0f }, // 0 - BL
+		{ 15.0f, -0.1f, 0.0f,	0.0f, 1.0f, 0.0f }, // 1 - BR
+		{ 15.0f, -0.1f, 15.0f,	0.0f, 1.0f, 0.0f }, // 2 - TR
+		{ 0.0f,	 -0.1f, 15.0f,	0.0f, 1.0f, 0.0f }  // 3 - TL
 };
 // specify our Ground Index Ordering
 const unsigned short groundIndices[] = {
@@ -149,7 +149,7 @@ bool shiftDown = false;
 bool leftMouseDown = false;
 glm::vec2 mousePosition(-9999.0f, -9999.0f);
 
-glm::vec3 cameraAngles(-0.4f, 2.25f, 30.0f);
+glm::vec3 cameraAngles(-0.4f, 2.0f, 150.0f);
 glm::vec3 eyePoint(10.0f, 10.0f, 10.0f);
 glm::vec3 lookAtPoint(0.0f, 0.0f, 0.0f);
 glm::vec3 upVector(0.0f, 1.0f, 0.0f);
@@ -179,14 +179,15 @@ float **u, **v, **r, **rNew, *g;
 float v_tot, v_cur, v_avg;
 float time = 0.0;
 int heightFieldWidth, heightFieldDepth;
+bool drawObject = true;
 
 //Location and size of a unit cube centered at location
-glm::vec3 cubeSize(1.9, 1.9, 1.9);
-glm::vec3 cubeLoc(10, 20, 10);
+glm::vec3 cubeSize(5.9, 5.9, 5.9);
+glm::vec3 cubeLoc(40, 20, 40);
 glm::vec3 cubeVelocity(0.0, 0.0, 0.0);
 //unit is meter cube is wood
-double cubeMass = 4080;
-double gravity = 9.8;
+double cubeMass = 510 * cubeSize.x * cubeSize.y * cubeSize.z;
+double gravity = 2* 9.8;
 double fluidDensity = 1000;
 
 // C is wave speed, timeStep is self explanatory, h is the relative width of a column to wave speed
@@ -201,6 +202,10 @@ bool pause   = true,	// default to paused
 void hfInitialize(int width, int depth) {
 	heightFieldWidth = width;
 	heightFieldDepth = depth;
+
+	groundVertices[1].px = groundVertices[2].px = groundVertices[2].pz = groundVertices[3].pz = 1.0*heightFieldWidth;
+	lookAtPoint.x = width / 2;
+	lookAtPoint.z = depth / 2;
 
 	//VBO for vertex position
 	//{x,y,z,x,y,z,.....
@@ -299,7 +304,7 @@ void hfUpdate() {
 			g[i] = 2*u[heightFieldWidth-1][i-2*heightFieldWidth-heightFieldDepth] - u[heightFieldWidth-2][i-2*heightFieldWidth-heightFieldDepth];
 		}
 	}
-	
+
 	//Update velocity of columns
 	float damping = 0.99;
 	for (int x = 0; x < heightFieldWidth; x++) {
@@ -343,56 +348,56 @@ void hfUpdate() {
 
 	//IMPORTANT:  ONLY WORKS WITH CUBES AND DOESN'T CHECK EDGE CONDITIONS
 	//Updates r, object, and u relative to object
+	if (drawObject) {
+		//Finds the corners of my cube in heightfield indices
+		int bottom = floor(cubeLoc.z - cubeSize.z / 2);
+		int top = floor(cubeLoc.z + cubeSize.z / 2);
+		int left = floor(cubeLoc.x - cubeSize.x / 2);
+		int right = floor(cubeLoc.x + cubeSize.x / 2);
 
-	//Amount of water displaced
-	float displacement = 0.0;
-	
-	//difference in r
-	float difference = 0.0;
+		//Amount of water displaced
+		float displacement = 0.0;
+
+		//difference in r
+		float difference = 0.0;
 
 
-	//Finds the corners of my cube in heightfield indices
-	int bottom = floor(cubeLoc.z - cubeSize.z / 2);
-	int top = floor(cubeLoc.z + cubeSize.z / 2);
-	int left = floor(cubeLoc.x - cubeSize.x / 2);
-	int right = floor(cubeLoc.x + cubeSize.x / 2);
+		//Updates rNew and calculates displacement;
+		for (int x = left; x <= right; x++) {
+			for (int z = bottom; z <= top; z++) {
+				//Calculates current column displacement, clamping between zero and cube height
+				float newDisp = v_avg - (cubeLoc.y - cubeSize.y / 2);
+				newDisp = newDisp >= 0.0 ? newDisp : 0.0;
+				newDisp = newDisp <= cubeSize.y ? newDisp : cubeSize.y;
 
-	//Updates rNew and calculates displacement;
-	for (int x = left; x <= right; x++) {
-		for (int z = bottom; z <= top; z++) {
-			//Calculates current column displacement, clamping between zero and cube height
-			float newDisp = u[x][z] - (cubeLoc.y - cubeSize.y / 2);
-			newDisp = newDisp >= 0.0 ? newDisp : 0.0;
-			newDisp = newDisp <= cubeSize.y ? newDisp : cubeSize.y;
-			
-			//Updates displacement, difference and r
-			displacement += newDisp;
-			difference += newDisp - r[x][z];
-			r[x][z] = newDisp;
+				//Updates displacement, difference and r
+				displacement += newDisp;
+				difference += newDisp - r[x][z];
+				r[x][z] = newDisp;
 
-			//Attempt to fix feedback loop issue
-			if (cubeLoc.y - cubeSize.y / 2 < u[x][z])
-				u[x][z] = cubeLoc.y;
-			
+				//Attempt to fix feedback loop issue
+				//if (cubeLoc.y - cubeSize.y / 2 < u[x][z])
+					//u[x][z] = cubeLoc.y;
+
+			}
 		}
-	}
 
-	//Update u with difference, add around shape perimeter
-	float added = difference / (2 * (top - bottom + right - left));
-	for (int x = left; x <= right; x++) {
-		u[x][bottom - 1] += added;
-		u[x][top + 1] += added;
-	}
-	for (int y = bottom; y <= top; y++) {
-		u[left - 1][y] += added;
-		u[right - 1][y] += added;
-	}
+		//Update u with difference, add around shape perimeter
+		float added = 4 * difference / (2 * (top - bottom + right - left));
+		for (int x = left; x <= right; x++) {
+			u[x][bottom - 1] += added;
+			u[x][top + 1] += added;
+		}
+		for (int y = bottom; y <= top; y++) {
+			u[left - 1][y] += added;
+			u[right + 1][y] += added;
+		}
 
-	//Move cube
-	cubeVelocity.y += (-gravity + fluidDensity*gravity*displacement / cubeMass)*timeStep;
-	cubeVelocity *= 0.99;
-	cubeLoc += cubeVelocity*timeStep;
-
+		//Move cube
+		cubeVelocity.y += (-gravity + fluidDensity*gravity*displacement / cubeMass)*timeStep;
+		cubeVelocity *= 0.99;
+		cubeLoc += cubeVelocity*timeStep;
+	}
 	
 	//Update heights
 	v_cur = 0;
@@ -425,9 +430,9 @@ void hfUpdate() {
 // Helper Funcs
 
 void convertSphericalToCartesian() {
-	eyePoint.x = cameraAngles.z * sinf( cameraAngles.x ) * sinf( cameraAngles.y );
-	eyePoint.y = cameraAngles.z * -cosf( cameraAngles.y );
-	eyePoint.z = cameraAngles.z * -cosf( cameraAngles.x ) * sinf( cameraAngles.y );
+	eyePoint.x = cameraAngles.z * sinf( cameraAngles.x ) * sinf( cameraAngles.y ) + lookAtPoint.x;
+	eyePoint.y = cameraAngles.z * -cosf( cameraAngles.y ) + lookAtPoint.y;
+	eyePoint.z = cameraAngles.z * -cosf( cameraAngles.x ) * sinf( cameraAngles.y ) + lookAtPoint.z;
 }
 
 //*************************************************************************************
@@ -444,6 +449,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	//Quit
 	if ((key == GLFW_KEY_ESCAPE || key == 'Q') && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	
+	//Draw object
+	if (key == 'D' && action == GLFW_PRESS)
+		drawObject = !drawObject;
+	
 	//Restart
 	if (key == 'R' && action == GLFW_PRESS)
 		hfInitialize(heightFieldWidth, heightFieldDepth);
@@ -491,7 +501,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			}
 		}
 	//Log debug to file
-	if (key == 'D' && action == GLFW_PRESS) {
+	if (key == 'F' && action == GLFW_PRESS) {
 		FILE *f = NULL;
 		if (shiftDown) f = fopen("debug.log", "a");
 		else f = fopen("debug.log", "w");
@@ -813,8 +823,6 @@ void setupBuffers() {
 
 // handles drawing everything to our buffer
 void renderScene(GLFWwindow *window) {
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
 	time = glfwGetTime();
 
 	// query our current window size, determine the aspect ratio, and set our viewport size
@@ -840,6 +848,8 @@ void renderScene(GLFWwindow *window) {
 
 	// use our Blinn-Phone Shading Program
 	blinnPhongShaderProgram->useProgram();
+
+	glDisable(GL_CULL_FACE);
 
 	//Set color
 	materialKa = glm::vec3(0.2745, 0.01175, 0.01175);
@@ -885,12 +895,16 @@ void renderScene(GLFWwindow *window) {
 	// bind our Cube VAO
 	glBindVertexArray(vaods[CUBE]);
 	// draw our cube!
-	glDrawElements(GL_TRIANGLES, sizeof(cubeIndices) / sizeof(unsigned short), GL_UNSIGNED_SHORT, (void*)0);
+	if (drawObject)
+		glDrawElements(GL_TRIANGLES, sizeof(cubeIndices) / sizeof(unsigned short), GL_UNSIGNED_SHORT, (void*)0);
 
 	mMtx = model;
 
 	//Draw Height Field
 	glBindVertexArray(vaoHeightField);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	materialKa = glm::vec3(0.0215, 0.0215, 0.3745);
 	materialKd = glm::vec3(0.07568, 0.07568, 0.81424);

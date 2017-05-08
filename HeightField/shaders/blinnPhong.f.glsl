@@ -71,6 +71,6 @@ void main() {
     fragColorOut = vec4(ambient + diffuse + spec,1);
     
     // if back facing, reverse our colors as a visual cue
-    if( !gl_FrontFacing )
-        fragColorOut.rgb = fragColorOut.bgr;
+    //if( !gl_FrontFacing )
+        //fragColorOut.rgb = fragColorOut.bgr;
 }
