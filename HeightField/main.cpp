@@ -803,8 +803,6 @@ void setupBuffers() {
 
 // handles drawing everything to our buffer
 void renderScene(GLFWwindow *window) {
-	time = glfwGetTime();
-
 	// query our current window size, determine the aspect ratio, and set our viewport size
 	float ratio;
 	glfwGetFramebufferSize(window, &windowWidth, &windowHeight);

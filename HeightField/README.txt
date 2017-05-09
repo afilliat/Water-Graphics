@@ -21,20 +21,26 @@ Usage:
 	R - resets height field to interesting shape
 	N - resets height field to flat
 	P - pauses simulation
-	Shift + P - pauses simulation and toggles step mode
+	LeftShift + P - pauses simulation and toggles step mode
 	O - reset cube location
 	B - create a ripple
 	Q - quit
+	F - write to debug file
 
 	Boundary types:
 		W - toggle wrap
 		C - toggle clamp
 		G - toggle ghost
 		
-	F - write to debug file
+		Boundry type prioritizes wrapping, clamping, then ghost.
+		If none are toggled on, ghost boundaries based on the average height of the columns will be used.
+		By default clamping is used.
+		These toggles as well as step mode are indicated to be turned on in the window title.
+		For example, if step mode (p), clamp (c), and ghost (g) are on it will display "Height Fields ( c g p )"
 
 Compilation Instructions:
-    Simply navigate to the directory and type 'mingw32-make.' 
+    Simply navigate to the directory and type 'mingw32-make.exe'
+	This creates an executable named HeightField.exe
 	
 	You can also type 'mingw32-make clean' to clean up the build files.
 	
