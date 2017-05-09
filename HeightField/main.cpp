@@ -1,17 +1,16 @@
 /*
  *  CSCI 444, Advanced Computer Graphics, Spring 2017
  *
- *  Project: jpaone_a1
+ *  Project: HeightFields
  *  File: main.cpp
  *
  *  Description:
- *      A1 Solution
- *
- *      Working VAO & VBO
- *      Blinn-Phong Shaders
+ *      Height Field simulation
  *
  *  Author:
- *      Dr. Jeffrey Paone, Colorado School of Mines
+ *      Joseph Wilson
+ *		Jacob Davis
+ *		Arnaud Filliat
  *  
  *  Notes:
  *
@@ -727,7 +726,7 @@ void setupShaders() {
 	bpAttribLocs.normal            = blinnPhongShaderProgram->getAttributeLocation( "vNorm" );
 
 	// load our shader program
-	pointShaderProgram = new CSCI441::ShaderProgram("shaders/point.v.glsl", "shaders/point.g.glsl", "shaders/point.f.glsl");
+	pointShaderProgram = new CSCI441::ShaderProgram("shaders/heightFieldColumn.v.glsl", "shaders/heightFieldColumn.g.glsl", "shaders/heightFieldColumn.f.glsl");
 
 	//Uniforms
 	pUniformLocs.modelviewMatrix = blinnPhongShaderProgram->getUniformLocation("modelviewMatrix");

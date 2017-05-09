@@ -1,3 +1,19 @@
+/*
+ *  CSCI 444, Advanced Computer Graphics, Spring 2017
+ *
+ *  Project: HeightFields
+ *  File: main.cpp
+ *
+ *  Description:
+ *      Height Field simulation
+ *		Geometry shader draws columns for heightField and calculates lighting vectors
+ *
+ *  Author:
+ *      Joseph Wilson
+ *		Jacob Davis
+ *		Arnaud Filliat
+ */
+
 #version 410
 
 layout(points) in;
@@ -34,6 +50,7 @@ void main() {
 	vec4 shiftX = vec4(0.9, 0, 0, 0);
 	vec4 shiftZ = vec4(0, 0, 0.9, 0);
 	
+	//Emits each side for box with shifts defined above applied to points and boxes starting at y=0
 	//Top
 	vec4 position = originPosition;
 	gl_Position = MVP_Matrix * position;

@@ -1,19 +1,16 @@
 /*
  *  CSCI 444, Advanced Computer Graphics, Spring 2017
  *
- *  Project: jpaone_a1
- *  File: blinnPhong.v.glsl
+ *  Project: HeightFields
+ *  File: main.cpp
  *
  *  Description:
- *      A1 Solution
- *
- *      Blinn-Phong Vertex Shader
+ *      Blinn-Phong shader for drawing objects
  *
  *  Author:
- *      Dr. Jeffrey Paone, Colorado School of Mines
- *
- *  Notes:
- *
+ *      Joseph Wilson
+ *		Jacob Davis
+ *		Arnaud Filliat
  */
 
 // we are using OpenGL 4.1 Core profile
