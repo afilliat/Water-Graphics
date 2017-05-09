@@ -1,5 +1,9 @@
 \documentclass[12pt,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
 
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\bibliography{references}
 
 % Title Page
 \title{Height Field Water Simulation}
@@ -37,8 +41,9 @@ How did your implementation work? Did it accomplish what it set out to do?
 
 In a couple paragraphs, summarize all of the above sections. Give any final thoughts on lessons learned, challenges that arose and how they were overcome, and next steps to take to future work.
 
-\section{References}
-
-List ALL references you used when researching and implementing your topic. This includes books, articles, websites, etc. For CSCI544 students, be sure to properly cite your references throughout your report as well.
+% References Section
+% to add references, put them in the file references.bib in the same style
+\nocite{*}
+\printbibliography
 
 \end{document}

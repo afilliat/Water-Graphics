@@ -1,0 +1,198 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.8 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\sortlist[entry]{nty/global/}
+  \entry{wave}{article}{}
+    \name{author}{1}{}{%
+      {{hash=MD}{%
+         family={Mike\v{s}},
+         familyi={M\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MD1}
+    \strng{fullhash}{MD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{title}{Real-time Water Simulation with Wave Particles on the GPU}
+    \verb{url}
+    \verb http://old.cescg.org/CESCG-2015/papers/Mikes-Real-time_Water_Simulati
+    \verb on_with_Wave_Particles_on_the_GPU.pdf
+    \endverb
+    \field{year}{2015}
+  \endentry
+
+  \entry{height}{article}{}
+    \name{author}{1}{}{%
+      {{hash=MB}{%
+         family={Mikl\'{o}s},
+         familyi={M\bibinitperiod},
+         given={B\'{a}lint},
+         giveni={B\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MB1}
+    \strng{fullhash}{MB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{title}{Real-Time Fluid Simulation Using Height Fields}
+    \verb{url}
+    \verb http://www.balintmiklos.com/layered_water.pdf
+    \endverb
+    \field{year}{2004}
+  \endentry
+
+  \entry{ppt}{online}{}
+    \name{author}{1}{}{%
+      {{hash=MFM}{%
+         family={M\"{u}ller-Fischer},
+         familyi={M\bibinitperiod-F\bibinitperiod},
+         given={Matthias},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{MFM1}
+    \strng{fullhash}{MFM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{title}{Fast Water Simulation for Games Using Height Fields}
+    \verb{url}
+    \verb http://matthias-mueller-fischer.ch/talks/GDC2008.pdf
+    \endverb
+    \field{year}{2008}
+  \endentry
+
+  \entry{roxlu}{online}{}
+    \name{author}{1}{}{%
+      {{hash=r}{%
+         family={roxlu},
+         familyi={r\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{r1}
+    \strng{fullhash}{r1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{R}
+    \field{sortinithash}{R}
+    \field{title}{Height Field Simulation on GPU}
+    \verb{url}
+    \verb http://roxlu.com/2013/024/height-field-simulation-on-gpu
+    \endverb
+    \field{year}{2013}
+  \endentry
+
+  \entry{shallow}{article}{}
+    \name{author}{6}{}{%
+      {{hash=SB}{%
+         family={Solenthaler},
+         familyi={S\bibinitperiod},
+         given={Barbara},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=BP}{%
+         family={Bucher},
+         familyi={B\bibinitperiod},
+         given={Peter},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=CN}{%
+         family={Chentanez},
+         familyi={C\bibinitperiod},
+         given={Nuttapong},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=MM}{%
+         family={M\"{u}ller},
+         familyi={M\bibinitperiod},
+         given={Matthias},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=}{%
+      }}%
+      {{hash=GM}{%
+         family={Gross},
+         familyi={G\bibinitperiod},
+         given={Markus},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \name{editor}{3}{}{%
+      {{hash=BJ}{%
+         family={Bender},
+         familyi={B\bibinitperiod},
+         given={J.},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=EK}{%
+         family={Erleben},
+         familyi={E\bibinitperiod},
+         given={K.},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=GE}{%
+         family={Galin},
+         familyi={G\bibinitperiod},
+         given={E.},
+         giveni={E\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SB+1}
+    \strng{fullhash}{SBBPCNMMGM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{title}{SPH Based Shallow Water Simulation}
+    \verb{url}
+    \verb http://matthias-mueller-fischer.ch/publications/SPHShallow.pdf
+    \endverb
+    \field{year}{2011}
+  \endentry
+
+  \entry{zz}{online}{}
+    \name{author}{1}{}{%
+      {{hash=ZZ}{%
+         family={Zheng},
+         familyi={Z\bibinitperiod},
+         given={Zejia},
+         giveni={Z\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ZZ1}
+    \strng{fullhash}{ZZ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Z}
+    \field{sortinithash}{Z}
+    \field{title}{Height field fluids simulation and shallow water equation}
+    \verb{url}
+    \verb http://zejiazheng.com/?p=87
+    \endverb
+    \warn{\item Invalid format of field 'date' \item Invalid format of field
+  'date'}
+  \endentry
+\endsortlist
+\endinput
