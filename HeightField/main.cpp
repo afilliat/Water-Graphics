@@ -208,7 +208,7 @@ void hfInitialize(int width, int depth) {
 	lookAtPoint.z = depth / 2;
 
 	//VBO for vertex position
-	//{x,y,z,x,y,z,.....
+	//(x,y,z,x,y,z,.....
 	//y = u
 	HeightFieldVertices = new float[width*depth*3];
 	
@@ -253,8 +253,6 @@ void hfInitialize(int width, int depth) {
  * with ghost boundaries for reflection
  */
 void hfUpdate() {
-
-	
 	//Update ghost boundaries
 	for (int i = 0; i < 2*heightFieldWidth+2*heightFieldDepth; i++) {
 		/*
@@ -934,8 +932,16 @@ int main( int argc, char *argv[] ) {
 	setupOpenGL();						// setup OpenGL & GLEW
 	setupShaders();						// load our shader programs, uniforms, and attribtues
 	setupBuffers();						// load our models into GPU memory
-
+	
 	convertSphericalToCartesian();		// position our camera in a pretty place
+	
+	char txt[50] = "Height Fields (";
+	if (wrap) strcat(txt, " w ");
+	if (clamp) strcat(txt, " c ");
+	if (ghost) strcat(txt, " g ");
+	if (pausing) strcat(txt, " p ");
+	strcat(txt, ")");
+	glfwSetWindowTitle(window, txt);
 	
 	// as long as our window is open
 	while( !glfwWindowShouldClose(window) ) {
