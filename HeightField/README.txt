@@ -46,6 +46,16 @@ Compilation Instructions:
 	You can also type 'mingw32-make clean' to clean up the build files.
 	
 	'mingw32-make new' forces a rebuild of all object files.
+	
+Notes:
+	Time:
+		Joseph:
+		Jacob:
+		Arnaud:
+	Fun:
+		Joseph:
+		Jacob:
+		Arnaud:
 
 Notes:
     This example will ONLY work in the computer labs on campus.  Developed in
