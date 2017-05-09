@@ -208,7 +208,7 @@ void hfInitialize(int width, int depth) {
 	lookAtPoint.z = depth / 2;
 
 	//VBO for vertex position
-	//{x,y,z,x,y,z,.....
+	//(x,y,z,x,y,z,.....
 	//y = u
 	HeightFieldVertices = new float[width*depth*3];
 	
@@ -248,19 +248,6 @@ void hfInitialize(int width, int depth) {
 			HeightFieldVertices[vertArrayLoc + 2] = z;
 		}
 	}
-	/*
-	if (ghost) {
-		//hack to fix broken ghost boundary
-		float c_avg = (u[0][0] + 
-			u[0][depth-1] + 
-			u[width-1][0] + 
-			u[width-1][depth-1]) / 4;
-		u[0][0] = c_avg;
-		u[0][depth-1] = c_avg;
-		u[width-1][0] = c_avg;
-		u[width-1][depth-1] = c_avg;
-	}
-	*/
 	
 	v_avg = v_tot / heightFieldWidth / heightFieldDepth;
 }
@@ -271,8 +258,6 @@ void hfInitialize(int width, int depth) {
  * with ghost boundaries for reflection
  */
 void hfUpdate() {
-
-	
 	//Update ghost boundaries
 	for (int i = 0; i < 2*heightFieldWidth+2*heightFieldDepth; i++) {
 		/*
@@ -952,8 +937,16 @@ int main( int argc, char *argv[] ) {
 	setupOpenGL();						// setup OpenGL & GLEW
 	setupShaders();						// load our shader programs, uniforms, and attribtues
 	setupBuffers();						// load our models into GPU memory
-
+	
 	convertSphericalToCartesian();		// position our camera in a pretty place
+	
+	char txt[50] = "Height Fields (";
+	if (wrap) strcat(txt, " w ");
+	if (clamp) strcat(txt, " c ");
+	if (ghost) strcat(txt, " g ");
+	if (pausing) strcat(txt, " p ");
+	strcat(txt, ")");
+	glfwSetWindowTitle(window, txt);
 	
 	// as long as our window is open
 	while( !glfwWindowShouldClose(window) ) {
