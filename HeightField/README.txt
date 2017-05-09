@@ -3,20 +3,35 @@ Advanced Computer Graphics
 Colorado School of Mines
 Spring 2017
 
-Dr. Jeffrey Paone
+Joseph Wilson
+Jacob Davis
+Arnaud Filliat
 
-Code Example: Assignment 1 Solution: OpenGL 4.1 Context using GLFW
+Final Project: Height Field Water Simulation
 
-    This program creates an OpenGL 4.1 Core Profile context using GLFW.  A cube
-	is stored in a VAO with corresponding VBOs.  The associated shaders implement
-	Blinn-Phong Shading per fragment.
+    This program implements a height field water simulation drawing the columns for 
+	the simulation.  The user can spawn waves and a cube to interact with the simulation.
 
 Usage: 
     The user can click and drag with the left mouse button to affect the
     current rotational value of the model.  Holding left shift allows the user to zoom
 	in/out while dragging the left mouse button.
+	
+	D - toggles cube on and off
+	R - resets height field to interesting shape
+	N - resets height field to flat
+	P - pauses simulation
+	Shift + P - pauses simulation and toggles step mode
+	O - reset cube location
+	B - create a ripple
+	Q - quit
 
-    The user can also press the 'q' key to quit the program.
+	Boundary types:
+		W - toggle wrap
+		C - toggle clamp
+		G - toggle ghost
+		
+	F - write to debug file
 
 Compilation Instructions:
     Simply navigate to the directory and type 'mingw32-make.' 
