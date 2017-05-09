@@ -174,31 +174,39 @@ GLuint vaods[2];
 
 //**************************************** Height Field ********************************
 //Variables
+//GPU VAO
 GLuint vaoHeightField;
 float *HeightFieldVertices;
+//Simulation variables
+//Storage
 float **u, **v, **r, *g;
 float v_tot, v_cur, v_avg;
 int heightFieldWidth, heightFieldDepth;
-bool drawObject = true;
-
 //Location and size of a unit cube centered at location
 glm::vec3 cubeSize(5.9, 5.9, 5.9);
 glm::vec3 cubeLoc(40, 20, 40);
 glm::vec3 cubeVelocity(0.0, 0.0, 0.0);
-//unit is meter cube is wood
-double cubeMass = 510 * cubeSize.x * cubeSize.y * cubeSize.z;
-double gravity = 2* 9.8;
-double fluidDensity = 1000;
 
+//Control
+bool drawObject = true;
+bool objectLevel = false;
+bool pause = true,	// default to paused
+pausing = false,	// pause after 1 tick
+wrap = false,	// no wrap => clamp?
+clamp = true,	// no clamp => ghost			// this is probably the best option as of now
+ghost = false;	// use g[] as ghost? (or avg)
+
+//Enviormental Variables
 // C is wave speed, timeStep is self explanatory, h is the relative width of a column to wave speed
 float c = 23, timeStep = 1.0 / 60.0, h = 1;
-bool pause   = true,	// default to paused
-	 pausing = false,	// pause after 1 tick
-	 wrap    = false,	// no wrap => clamp?
-	 clamp   = true,	// no clamp => ghost			// this is probably the best option as of now
-	 ghost   = false;	// use g[] as ghost? (or avg)
+//unit is meter cube is wood
+float cubeMass = 510 * cubeSize.x * cubeSize.y * cubeSize.z;
+float gravity = 2* 9.8;
+float fluidDensity = 1000;
 
-//width and height > 1
+
+//Initialize Height field.   Sets u array to intial position and v,r, and g to 0's.  Also assigns 
+//heightField width and depth with provided arguments
 void hfInitialize(int width, int depth) {
 	heightFieldWidth = width;
 	heightFieldDepth = depth;
@@ -208,7 +216,7 @@ void hfInitialize(int width, int depth) {
 	lookAtPoint.z = depth / 2;
 
 	//VBO for vertex position
-	//(x,y,z,x,y,z,.....
+	//{x,y,z,x,y,z,.....
 	//y = u
 	HeightFieldVertices = new float[width*depth*3];
 	
@@ -225,6 +233,7 @@ void hfInitialize(int width, int depth) {
 		v[x] = new float[depth];
 		r[x] = new float[depth];
 		for (int z = 0; z < depth; z++) {
+			//Give U 
 			if (x < width/2 && z < depth/2) u[x][z] = 15;
 			else if (x >= width/2 && z >= depth/2) u[x][z] = 15;
 			else u[x][z] = 5;
@@ -234,8 +243,10 @@ void hfInitialize(int width, int depth) {
 			v[x][z] = 0;
 			r[x][z] = 0;
 			
+			//Sums total height to calculate average
 			v_tot += u[x][z];
 
+			//Sets up array for FBO
 			//3 vertex numbers per one u/v number
 			int vertArrayLoc = (x + z * width) * 3;
 			HeightFieldVertices[vertArrayLoc] = x;
@@ -244,15 +255,18 @@ void hfInitialize(int width, int depth) {
 		}
 	}
 	
+	//Calculate average height
 	v_avg = v_tot / heightFieldWidth / heightFieldDepth;
 }
 
 /*
  * Algorithm for height field propagation
  * based on 4 surrounding columns
- * with ghost boundaries for reflection
+ * with several boundary options
  */
 void hfUpdate() {
+
+	
 	//Update ghost boundaries
 	for (int i = 0; i < 2*heightFieldWidth+2*heightFieldDepth; i++) {
 		/*
@@ -289,6 +303,8 @@ void hfUpdate() {
 	float damping = 0.99;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
+			//Calculate force due to surrounding column heights
+			//Several options for boundary checks
 			float force = 0;
 			if (wrap) {
 				//wrapping boundaries
@@ -318,14 +334,16 @@ void hfUpdate() {
 					(x - 1 >= 0 ? u[x - 1][z] : v_avg) +
 					(x + 1 < heightFieldWidth ? u[x + 1][z] : v_avg));
 			}
+			//Finish force calculation
 			force -= 4 * u[x][z];
 			force *= c*c/(h*h);
+			//Velocity is updated with force * timestep and damped to simulate friction
 			v[x][z] += force*timeStep;
 			v[x][z] *= damping;
 		}
 	}
 
-
+	//Object interaction:
 	//IMPORTANT:  ONLY WORKS WITH CUBES AND DOESN'T CHECK EDGE CONDITIONS
 	//Updates r, object, and u relative to object
 	if (drawObject) {
@@ -346,7 +364,12 @@ void hfUpdate() {
 		for (int x = left; x <= right; x++) {
 			for (int z = bottom; z <= top; z++) {
 				//Calculates current column displacement, clamping between zero and cube height
-				float newDisp = v_avg/*u[x][z]*/ - (cubeLoc.y - cubeSize.y / 2);
+				float newDisp;
+				//use column height or average water level
+				if (objectLevel)
+					newDisp = u[x][z] - (cubeLoc.y - cubeSize.y / 2);
+				else
+					newDisp = v_avg - (cubeLoc.y - cubeSize.y / 2);
 				newDisp = newDisp >= 0.0 ? newDisp : 0.0;
 				newDisp = newDisp <= cubeSize.y ? newDisp : cubeSize.y;
 
@@ -355,15 +378,20 @@ void hfUpdate() {
 				difference += newDisp - r[x][z];
 				r[x][z] = newDisp;
 
-				//Attempt to fix feedback loop issue
-				//if (cubeLoc.y - cubeSize.y / 2 < u[x][z])
-					//u[x][z] = cubeLoc.y;
+				//Attempt to fix feedback loop issue when using column height
+				if (objectLevel)
+					if (cubeLoc.y - cubeSize.y / 2 < u[x][z])
+						u[x][z] = cubeLoc.y;
 
 			}
 		}
 
-		//Update u with difference, add around shape perimeter
-		float added = 4 * difference / (2 * (top - bottom + right - left));
+		//Update u with difference in displacement, add around shape perimeter
+		float added;
+		if (objectLevel)
+			added = difference / (2 * (top - bottom + right - left));
+		else
+			added = 4 * difference / (2 * (top - bottom + right - left));
 		for (int x = left; x <= right; x++) {
 			u[x][bottom - 1] += added;
 			u[x][top + 1] += added;
@@ -373,13 +401,13 @@ void hfUpdate() {
 			u[right + 1][y] += added;
 		}
 
-		//Move cube
+		//Move cube due to forces from gravity and water
 		cubeVelocity.y += (-gravity + fluidDensity*gravity*displacement / cubeMass)*timeStep;
 		cubeVelocity *= 0.99;
 		cubeLoc += cubeVelocity*timeStep;
 	}
 	
-	//Update heights
+	//Update heights in u array due to velocity
 	v_cur = 0;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
@@ -393,7 +421,7 @@ void hfUpdate() {
 	}
 
 	//Prevent addition or removal of water from the system
-	//Transfer data to GPU array
+	//Transfer data to GPU array for FBO
 	float v_dif = v_avg - v_cur / heightFieldWidth / heightFieldDepth;
 	for (int x = 0; x < heightFieldWidth; x++) {
 		for (int z = 0; z < heightFieldDepth; z++) {
@@ -402,6 +430,7 @@ void hfUpdate() {
 		}
 	}
 	
+	//For step mode
 	if (pausing) pause = true;
 }
 
@@ -429,7 +458,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	//Quit
 	if ((key == GLFW_KEY_ESCAPE || key == 'Q') && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	
+	//Toggle cube interaction type
+	if (key == 'L' && action == GLFW_PRESS)
+		objectLevel = !objectLevel;
 	//Draw object
 	if (key == 'D' && action == GLFW_PRESS)
 		drawObject = !drawObject;
@@ -459,6 +490,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == 'B' && action == GLFW_PRESS)
 		for (int x = 0; x < heightFieldWidth; x++) {
 			for (int z = 0; z < heightFieldDepth; z++) {
+				//Add ripple
 				if ((x == heightFieldWidth/4 || 
 					x == heightFieldWidth*3/4 || 
 					z == heightFieldDepth/4 || 
@@ -475,6 +507,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == 'N' && action == GLFW_PRESS)
 		for (int x = 0; x < heightFieldWidth; x++) {
 			for (int z = 0; z < heightFieldDepth; z++) {
+				//Set to avg height
 				u[x][z] = v_tot / heightFieldWidth / heightFieldDepth;
 				v[x][z] = 0;
 				HeightFieldVertices[(x + z * heightFieldWidth) * 3 + 1] = u[x][z];
@@ -803,8 +836,6 @@ void setupBuffers() {
 
 // handles drawing everything to our buffer
 void renderScene(GLFWwindow *window) {
-	time = glfwGetTime();
-
 	// query our current window size, determine the aspect ratio, and set our viewport size
 	float ratio;
 	glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
@@ -932,16 +963,8 @@ int main( int argc, char *argv[] ) {
 	setupOpenGL();						// setup OpenGL & GLEW
 	setupShaders();						// load our shader programs, uniforms, and attribtues
 	setupBuffers();						// load our models into GPU memory
-	
+
 	convertSphericalToCartesian();		// position our camera in a pretty place
-	
-	char txt[50] = "Height Fields (";
-	if (wrap) strcat(txt, " w ");
-	if (clamp) strcat(txt, " c ");
-	if (ghost) strcat(txt, " g ");
-	if (pausing) strcat(txt, " p ");
-	strcat(txt, ")");
-	glfwSetWindowTitle(window, txt);
 	
 	// as long as our window is open
 	while( !glfwWindowShouldClose(window) ) {
