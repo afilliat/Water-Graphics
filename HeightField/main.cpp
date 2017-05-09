@@ -173,11 +173,11 @@ GLuint vaods[2];
 //*************************************************************************************
 
 //**************************************** Height Field ********************************
+//Variables
 GLuint vaoHeightField;
 float *HeightFieldVertices;
-float **u, **v, **r, **rNew, *g;
+float **u, **v, **r, *g;
 float v_tot, v_cur, v_avg;
-float time = 0.0;
 int heightFieldWidth, heightFieldDepth;
 bool drawObject = true;
 
@@ -216,28 +216,23 @@ void hfInitialize(int width, int depth) {
 	u = new float*[width];
 	v = new float*[width];
 	r = new float*[width];
-	rNew = new float*[width];
 	g = new float[2*width+2*depth];	//don't need corners
 	
 	//Initialize arrays
 	v_tot = 0;
-	srand(floor(time));
 	for (int x = 0; x < width; x++) {
 		u[x] = new float[depth];
 		v[x] = new float[depth];
 		r[x] = new float[depth];
-		rNew[x] = new float[depth];
 		for (int z = 0; z < depth; z++) {
 			if (x < width/2 && z < depth/2) u[x][z] = 15;
 			else if (x >= width/2 && z >= depth/2) u[x][z] = 15;
 			else u[x][z] = 5;
 			//u[x][z] = 0;
 			//u[x][z] = 10 + 15 * cosf(8*M_PI*x/width) * sinf(8*M_PI*z/depth);
-			// u[x][z] = 5 + rand() % 10;
 			
 			v[x][z] = 0;
 			r[x][z] = 0;
-			rNew[x][z] = 0;
 			
 			v_tot += u[x][z];
 
@@ -248,19 +243,6 @@ void hfInitialize(int width, int depth) {
 			HeightFieldVertices[vertArrayLoc + 2] = z;
 		}
 	}
-	/*
-	if (ghost) {
-		//hack to fix broken ghost boundary
-		float c_avg = (u[0][0] + 
-			u[0][depth-1] + 
-			u[width-1][0] + 
-			u[width-1][depth-1]) / 4;
-		u[0][0] = c_avg;
-		u[0][depth-1] = c_avg;
-		u[width-1][0] = c_avg;
-		u[width-1][depth-1] = c_avg;
-	}
-	*/
 	
 	v_avg = v_tot / heightFieldWidth / heightFieldDepth;
 }
@@ -366,7 +348,7 @@ void hfUpdate() {
 		for (int x = left; x <= right; x++) {
 			for (int z = bottom; z <= top; z++) {
 				//Calculates current column displacement, clamping between zero and cube height
-				float newDisp = v_avg - (cubeLoc.y - cubeSize.y / 2);
+				float newDisp = v_avg/*u[x][z]*/ - (cubeLoc.y - cubeSize.y / 2);
 				newDisp = newDisp >= 0.0 ? newDisp : 0.0;
 				newDisp = newDisp <= cubeSize.y ? newDisp : cubeSize.y;
 
