@@ -1,3 +1,19 @@
+/*
+ *  CSCI 444, Advanced Computer Graphics, Spring 2017
+ *
+ *  Project: HeightFields
+ *  File: main.cpp
+ *
+ *  Description:
+ *      Height Field simulation
+ *		Applies lighting to heightfield columns
+ *
+ *  Author:
+ *      Joseph Wilson
+ *		Jacob Davis
+ *		Arnaud Filliat
+ */
+
 #version 410 core
 
 // group our light information
