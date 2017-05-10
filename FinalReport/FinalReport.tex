@@ -27,13 +27,42 @@ In this project we implement a height field simulation and give the user the abi
 
 \section{Related Work}
 
-Computational fluid dynamics has a long history. The first development was in the 1800s when George Stokes formulated the Navier-Stokes equation which describes the dynamics of fluids. Using this equation which describes the conservation of momentum and a mass conservation equation and state equation it becomes possible to simulate fluids. (6)
-Numerous approaches have been used to describe fluid dynamics on computers. Particle-based approaches have been used to animate surfaces, lava flows, and animate fluid motion. (1,2,4) Using particles can simplify the conservation of mass equation and Navier-Stokes equation because the number of particles is constant and each particle has a constant mass thus conservation is guaranteed.
-Particle systems have been used for things other than fluid simulations too and are greatly applicable. A good example is for object modeling.(3) For fluids particle systems can realistically animate fluids and how they interact with various objects, yet fall short with larger bodies.(6)
+Computational fluid dynamics has a long history. The first development was in 
+the 1800s when George Stokes formulated the Navier-Stokes equation which 
+describes the dynamics of fluids. Using this equation which describes the 
+conservation of momentum and a mass conservation equation and state equation it 
+becomes possible to simulate fluids. \cite{particle}
+Numerous approaches have been used to describe fluid dynamics on computers. 
+Particle-based approaches have been used to animate surfaces, lava flows, and 
+animate fluid motion. \cite{smooth}\cite{dynamic}\cite{implicit} Using 
+particles can simplify the conservation of mass equation and Navier-Stokes 
+equation because the number of particles is constant and each particle has a 
+constant mass thus conservation is guaranteed.
+Particle systems have been used for things other than fluid simulations too and 
+are greatly applicable. A good example is for object modeling. \cite{oriented} 
+For fluids 
+particle systems can realistically animate fluids and how they interact with 
+various objects, yet fall short with larger bodies. \cite{particle}
 
-Another use for particle system is a wave particle method. Wave particle have position and mass like all other particles but also store the propagation angle, dispersion angle, origin, and amplitude. Using all of these the wave particle can give the direction of the wave, the energy of the wave and the spatial range in which the particles appear. In this particle system wave boundaries are required for reflecting the wave fronts.(8) Wave particles are similar to how height fields and our system will work yet our system should be able to be expanded to a bigger field without loss of real-time display due to the low computational overhead.
+Another use for particle system is a wave particle method. Wave particle have 
+position and mass like all other particles but also store the propagation 
+angle, dispersion angle, origin, and amplitude. Using all of these the wave 
+particle can give the direction of the wave, the energy of the wave and the 
+spatial range in which the particles appear. In this particle system wave 
+boundaries are required for reflecting the wave fronts. \cite{realtime} Wave 
+particles are similar to how height fields and our system will work yet our 
+system should be able to be expanded to a bigger field without loss of 
+real-time display due to the low computational overhead.
 
-Another technique used in the past involves shallow water equations. These equations also uses the Navier-Stokes equation and are derived by depth integrating it. This creates a set of partial differential equations that describe the flow below a pressure surface in a fluid.  An interesting point about shallow water equations is that the vertical velocity term is not present in them yet this does not mean the vertical velocity is zero as otherwise there would be no movement in the wave surface. Shallow water equations have been used in the past to model Coriolis forces in atmosphere and oceanic models.(7)
+Another technique used in the past involves shallow water equations. These 
+equations also uses the Navier-Stokes equation and are derived by depth 
+integrating it. This creates a set of partial differential equations that 
+describe the flow below a pressure surface in a fluid.  An interesting point 
+about shallow water equations is that the vertical velocity term is not present 
+in them yet this does not mean the vertical velocity is zero as otherwise there 
+would be no movement in the wave surface. Shallow water equations have been 
+used in the past to model Coriolis forces in atmosphere and oceanic models. 
+\cite{shalloweq}
 
 
 \section{Problem Statement}
