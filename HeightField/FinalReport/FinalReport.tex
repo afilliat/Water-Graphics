@@ -1,6 +1,17 @@
 \documentclass[12pt,titlepage]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{graphicx}
+\usepackage[pdftex]{hyperref}
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage{titling}
+\usepackage{titlesec}
+\usepackage{xspace}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{parskip}
 
 \usepackage[backend=bibtex,style=numeric]{biblatex}
 \bibliography{references}
@@ -21,9 +32,26 @@ Provide a one paragraph summary of your entire project. Very briefly mention why
 
 Many applications of computer graphics involve fluid simulations of some sort.  The most realistic simulations involve massive particle systems and take large amounts of time to run offline.  For applications that are interactive, this is unreasonable and other solutions must be explored.  Procedural fluids are acceptable for background situations where the user does not actually interact with it but it’s illusion of realism is rapidly destroyed when any object comes in contact with it.  As such it is important to find a solution that allows interaction in real-time with fluids, primarily water.
 
-While many solutions exist most all rely on reducing the complexity of the simulation.  Wave particles reduce from a particle for each molecule of water to a particle for a wave that deforms the water surface as it passes.  We chose to focus on height fields which reduce a 3-dimensional particle system to a 2 dimensional system of columns.  This provides a massive reduction in computational intensity while maintaining an acceptable level of realism in most simulations.
+While many solutions exist most all rely on reducing the complexity of the 
+simulation.  Wave particles reduce from a particle for each molecule of water 
+to a particle for a wave that deforms the water surface as it passes.  We chose 
+to focus on height fields which reduce a 3-dimensional particle system to a 2 
+dimensional system of columns.  This provides a massive reduction in 
+computational intensity while maintaining an acceptable level of realism in 
+most simulations.
 
-In this project we implement a height field simulation and give the user the ability to drop a cube into the fluid in real-time.  In this paper we will detail the internals of this implementation and problems we encountered.  We will begin, however, by discussing the advantages and disadvantages of various types of fluid simulations.
+\begin{figure}[H]
+    \caption{Height Field}
+    \label{fig:field}
+    \centering
+    \includegraphics[width=0.7\textwidth]{../www/images/field}
+\end{figure}
+
+In this project we implement a height field simulation and give the user the 
+ability to drop a cube into the fluid in real-time as show in \ref{fig:field}.  
+In this paper we will detail the internals of this implementation and problems 
+we encountered.  We will begin, however, by discussing the advantages and 
+disadvantages of various types of fluid simulations.
 
 \section{Related Work}
 
@@ -90,9 +118,17 @@ process of forward Euler integration can lead to feedback loops if not
 controlled so we implement damping and clamping.  Velocity is damped by a 
 factor of 0.99 each step and column height is bounded between -100 and 100 
 although with the damping factor these extremes are rarely reached.
+
+\begin{figure}[H]
+    \caption{Reflecting Waves}
+    \label{fig:reflection}
+    \centering
+    \includegraphics[width=0.7\textwidth]{../www/images/bouncingWaves}
+\end{figure}
 	
 An important part of the simulation is using various boundary conditions to 
-mimic realistic wave reflection off of rigid surfaces or mimic large bodies of 
+mimic realistic wave reflection off of rigid surfaces, as seen in figure 
+\ref{fig:reflection}, or mimic large bodies of 
 water. Our implementation has the option to perform four different boundary 
 conditions using a variety of techniques. The first technique to be implemented 
 is called boundary clamping. When using clamping, the columns on the edges of 
@@ -120,7 +156,46 @@ avoid this such as setting the corners to be equal to the average at the start
 or using clamping only for the corners, but we left this flaw in our program to 
 display it.
 
-Object interaction is implemented with a cube.  Our cube is therefore drawn with edges parallel to the edges of our columns.  During each step of the simulation we find the location of the corners of the cube with respect to the indices of our columns.  This allows us to compare the cubes height with that of the water.  By subtracting the height of the base of the cube from the height of the water and clamping between 0 and cube width we calculate the amount of water displaced by the cube.  The displacement of each column is stored in another 2-dimensional array and by comparing the new displacement with the old we are able to calculate the change in displacement of water by the cube.  Once the total displacement and the change in displacement are known these values are used to calculate the force on the cube and the change in water level around the cube respectively.  Any change in displaced water is added or subtracted directly to the columns surrounding the cube.  Our height field inside the cube is not modified allowing water to cover the cube should it fall below the water level.  Because the height field is not modified on the inside of the cube a feedback loop can occur.  The displaced water is added to the surrounding columns which flow inward increasing the amount of displaced water by the cube, adding more water to the surrounding columns.  This was solved in two ways.  The first option sets the height of each internal column to halfway up the cube.  This allows the following update due to column velocity to pull a column above the cube and prevents the feedback loop but gives the water a much more viscous appearance with it clinging to the cube, creating depressions and mounds in the surface when the cube is dropped and raised respectively.  The second option is to use the average water level instead of the local column height.  This leads to realistic simulations when the water is relatively flat but leads to disconnected water ripples and cube movement if the surface is far above or below average at that location.  Once the water is updated the cube is moved using Forward Euler integration and standard physics equations.  Force due to water is calculated with density*gravity*displacement and both it and gravity are applied to velocity and then velocity to cube location.
+\begin{figure}[H]
+    \caption{Object Creating Ripples}
+    \label{fig:ripples}
+    \centering
+    \includegraphics[width=0.7\textwidth]{../www/images/objectRipples}
+\end{figure}
+
+Object interaction is implemented with a cube and our cube is drawn with edges 
+parallel to the edges of our columns the cube being dropped into the water 
+creating ripples can be seen in figure \ref{fig:ripples}.  To create these 
+ripples, during each step of 
+the simulation we 
+find the location of the corners of the cube with respect to the indices of our 
+columns.  This allows us to compare the cubes height with that of the water.  
+By subtracting the height of the base of the cube from the height of the water 
+and clamping between 0 and cube width we calculate the amount of water 
+displaced by the cube.  The displacement of each column is stored in another 
+2-dimensional array and by comparing the new displacement with the old we are 
+able to calculate the change in displacement of water by the cube.  Once the 
+total displacement and the change in displacement are known these values are 
+used to calculate the force on the cube and the change in water level around 
+the cube respectively.  Any change in displaced water is added or subtracted 
+directly to the columns surrounding the cube.  Our height field inside the cube 
+is not modified allowing water to cover the cube should it fall below the water 
+level.  Because the height field is not modified on the inside of the cube a 
+feedback loop can occur.  The displaced water is added to the surrounding 
+columns which flow inward increasing the amount of displaced water by the cube, 
+adding more water to the surrounding columns.  This was solved in two ways.  
+The first option sets the height of each internal column to halfway up the 
+cube.  This allows the following update due to column velocity to pull a column 
+above the cube and prevents the feedback loop but gives the water a much more 
+viscous appearance with it clinging to the cube, creating depressions and 
+mounds in the surface when the cube is dropped and raised respectively.  The 
+second option is to use the average water level instead of the local column 
+height.  This leads to realistic simulations when the water is relatively flat 
+but leads to disconnected water ripples and cube movement if the surface is far 
+above or below average at that location.  Once the water is updated the cube is 
+moved using Forward Euler integration and standard physics equations.  Force 
+due to water is calculated with density*gravity*displacement and both it and 
+gravity are applied to velocity and then velocity to cube location.
 
 It is also important to ensure water is not added or removed from the simulation.  To do this we initially calculate an average volume for a column.  Upon each step we recalculate this average and add or subtract the difference from every column.  This prevents small errors in calculation from drastically altering the volume of our fluid over time.
 
@@ -128,9 +203,49 @@ The final step is drawing the height field.  To do this we created an additional
 
 \section{Results}
 
-Our implementation works well for modeling the surface movement of water.  Ripples are clearly visible and can be seen propagating off of walls. Additionally, we were able to simulate object interaction; our cube is able to both effect and be affected by water.  The simulation also runs in real-time showing no significant slowdowns when run on our machine. While we were unable to implement a mesh over the surface of the water or any complex lighting techniques our focus was primarily on the simulation of water movement which our implementation successfully models.
+\begin{figure}[H]
+    \caption{Dispersing Waves}
+    \label{fig:waves}
+    \centering
+    \includegraphics[width=0.7\textwidth]{../www/images/waterWaves}
+\end{figure}
 
-Our implementation does have a few bugs, most notably both of our options for preventing feedback due to water displacement.  Setting the water level to the center of the cube creates large depressions or hills as the cube moved below or above the water’s surface.  While the water was still able to cover and separate from the cube the simulation was more akin to oil then water due to the surface tension.  The other option produced realistic results when the water level was near level.  However if for some reason the cube was falling into water that was significantly higher or lower than average the interaction would occur far later or earlier than it should.  Other than this and minor problems due to our environmental constants our simulation does perform as it should.
+\begin{figure}[H]
+    \caption{Wave Front}
+    \label{fig:front}
+    \centering
+    \includegraphics[width=0.7\textwidth]{../www/images/waveFront}
+\end{figure}
+
+Our implementation works well for modeling the surface movement of water as 
+seen in figures \ref{fig:waves} and \ref{fig:front}.  
+Ripples are clearly visible and can be seen propagating off of walls as seen in 
+figure \ref{fig:reflection}. 
+Additionally, we were able to simulate object interaction; our cube is able to 
+both effect and be affected by water.  The simulation also runs in real-time 
+showing no significant slowdowns when run on our machine. While we were unable 
+to implement a mesh over the surface of the water or any complex lighting 
+techniques our focus was primarily on the simulation of water movement which 
+our implementation successfully models.
+
+\begin{figure}[H]
+    \caption{Object Creating Water Displacement}
+    \label{fig:displacement}
+    \centering
+    \includegraphics[width=0.7\textwidth]{../www/images/objectWaterDisplacement}
+\end{figure}
+
+Our implementation does have a few bugs, most notably both of our options for 
+preventing feedback due to water displacement.  Setting the water level to the 
+center of the cube creates large depressions or hills as the cube moved below 
+or above the water’s surface as seen in figure \ref{fig:displacement}.  While 
+the water was still able to cover and separate from the cube the simulation was 
+more akin to oil then water due to the surface tension.  The other option 
+produced realistic results when the water level was near level.  However if for 
+some reason the cube was falling into water that was significantly higher or 
+lower than average the interaction would occur far later or earlier than it 
+should.  Other than this and minor problems due to our environmental constants, 
+our simulation does perform as intended.
 
 \section{Conclusion}
 
