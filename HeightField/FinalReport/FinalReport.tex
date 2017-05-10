@@ -34,13 +34,20 @@ affect and respond to the height field through basic kinematics.
 
 \section{Introduction}
 
-Many applications of computer graphics involve fluid simulations of some sort.  The most realistic simulations involve massive particle systems and take large amounts of time to run offline.  For applications that are interactive, this is unreasonable and other solutions must be explored.  Procedural fluids are acceptable for background situations where the user does not actually interact with it but it’s illusion of realism is rapidly destroyed when any object comes in contact with it.  As such it is important to find a solution that allows interaction in real-time with fluids, primarily water.
+Many applications of computer graphics involve fluid simulations of some sort. 
+The most realistic simulations involve massive particle systems and take large 
+amounts of time to run offline. For applications that are interactive, this is 
+unreasonable and other solutions must be explored. Procedural fluids are 
+acceptable for background situations where the user does not actually interact 
+with it but it’s illusion of realism is rapidly destroyed when any object comes 
+in contact with it. As such it is important to find a solution that allows 
+interaction in real-time with fluids, primarily water.
 
 While many solutions exist most all rely on reducing the complexity of the 
-simulation.  Wave particles reduce from a particle for each molecule of water 
-to a particle for a wave that deforms the water surface as it passes.  We chose 
-to focus on height fields which reduce a 3-dimensional particle system to a 2 
-dimensional system of columns.  This provides a massive reduction in 
+simulation. Wave particles reduce from a particle for each molecule of water 
+to a particle for a wave that deforms the water surface as it passes. We chose 
+to focus on height fields which reduce a 3-dimensional particle system to a two 
+dimensional system of columns. This provides a massive reduction in 
 computational intensity while maintaining an acceptable level of realism in 
 most simulations.
 
@@ -52,9 +59,9 @@ most simulations.
 \end{figure}
 
 In this project we implement a height field simulation and give the user the 
-ability to drop a cube into the fluid in real-time as show in \ref{fig:field}.  
+ability to drop a cube into the fluid in real-time as show in \ref{fig:field}. 
 In this paper we will detail the internals of this implementation and problems 
-we encountered.  We will begin, however, by discussing the advantages and 
+we encountered. We will begin, however, by discussing the advantages and 
 disadvantages of various types of fluid simulations.
 
 \section{Related Work}
@@ -76,11 +83,11 @@ For fluids
 particle systems can realistically animate fluids and how they interact with 
 various objects, yet fall short with larger bodies. \cite{particle}
 
-Another use for particle system is a wave particle method. Wave particle have 
+Another use for particle system is a wave particle method. Wave particles have 
 position and mass like all other particles but also store the propagation 
 angle, dispersion angle, origin, and amplitude. Using all of these the wave 
-particle can give the direction of the wave, the energy of the wave and the 
-spatial range in which the particles appear. In this particle system wave 
+particle can give the direction of the wave, the energy of the wave, and the 
+spatial range in which the particles appear. In this particle system, wave 
 boundaries are required for reflecting the wave fronts. \cite{realtime} Wave 
 particles are similar to how height fields and our system will work yet our 
 system should be able to be expanded to a bigger field without loss of 
@@ -89,7 +96,7 @@ real-time display due to the low computational overhead.
 Another technique used in the past involves shallow water equations. These 
 equations also uses the Navier-Stokes equation and are derived by depth 
 integrating it. This creates a set of partial differential equations that 
-describe the flow below a pressure surface in a fluid.  An interesting point 
+describe the flow below a pressure surface in a fluid. An interesting point 
 about shallow water equations is that the vertical velocity term is not present 
 in them yet this does not mean the vertical velocity is zero as otherwise there 
 would be no movement in the wave surface. Shallow water equations have been 
@@ -99,28 +106,45 @@ used in the past to model Coriolis forces in atmosphere and oceanic models.
 
 \section{Problem Statement}
 
-Simulating water in real-time is very difficult as water is a large particle system where each particle interacts with its neighbors via a complex set of equations.  Very realistic water simulations can be created with particle systems, however, it is not generally reasonable to expect them to run in real-time.  This is due to the large amount of computational power required to update a complex 3-dimensional particle system.  One solution to the problem is wave particles.  Wave particles have a relatively low computational cost as the particles do not have to interact with each other and only have to apply a simple deformation to a plain.  The problem with wave particles is that it is difficult to model many different types of object.  The technique requires a separate set of information for each object resulting in large memory costs with many objects.  Height fields were the solution we chose as they reduced the computational complexity of particle systems to two dimensions while still providing a great deal of realism and the ability to interact with objects relatively easily with minimal comparative computational costs.  Shallow water equations provide a much more realistic simulation than height fields while requiring a minimal amount of extra memory but we were unable to reach a stage where we could implement them.
+Simulating water in real-time is very difficult as water is a large particle 
+system where each particles interact with their neighbors via a complex set of 
+equations. Very realistic water simulations can be created with particle 
+systems; however, it is not generally reasonable to expect them to run in 
+real-time. This is due to the large amount of computational power required to 
+update a complex three dimensional particle system. One solution to the problem 
+is wave particles. Wave particles have a relatively low computational cost as 
+the particles do not have to interact with each other and only have to apply a 
+simple deformation to a plain. The problem with wave particles is that it is 
+difficult to model many different types of object. The technique requires a 
+separate set of information for each object resulting in large memory costs 
+with many objects. Height fields were the solution we chose as they reduced the 
+computational complexity of particle systems to two dimensions while still 
+providing a great deal of realism and the ability to interact with objects 
+relatively easily with minimal comparative computational costs. Shallow water 
+equations provide a much more realistic simulation than simple height fields 
+while requiring a minimal amount of extra memory but we were unable to reach a 
+stage where we could implement them.
  
 \section{Problem Solution}
 
 Any water simulation has two primary parts, the water movement and the water 
-lighting.  Our implementation focuses on water movement.  The height field 
-information is stored in two, two dimensional arrays.  One for column height 
-and one for column velocity.  These columns are updated each frame.  Each 
+lighting. Our implementation focuses on water movement. The height field 
+information is stored in two, two dimensional arrays. One for column height 
+and one for column velocity. These columns are updated each frame. Each 
 column calculates the force on it due to the four surrounding columns with this 
 equation. \[ f = c^2 ( u[i+1,j] + u[i-1,j] + u[i,j+1] + u[i,j-1] – 4 u[i,j] 
-)/h^2 \]  C 
-represents the speed of a wave and h represents the width of a column.  This 
+)/h^2 \] C 
+represents the speed of a wave and h represents the width of a column. This 
 equation is derived from a reduction of realistic wave equations to two 
-dimensions.  Our simulation takes place on a large scale with each column 
-representing a 1 meter by 1 meter column of water.  After the force is 
-calculated, it is applied to the velocity of each column.  The force is 
+dimensions. Our simulation takes place on a large scale with each column 
+representing a 1 meter by 1 meter column of water. After the force is 
+calculated, it is applied to the velocity of each column. The force is 
 multiplied by the amount of time that has passed since the last update, 1/60th 
-of a second in our case.  This ensures that steps remain constant even if 
-framerate is changed.  After all velocities have been updated the height of 
-each column is modified by adding velocity multiplied by the time step.  This 
+of a second in our case. This ensures that steps remain constant even if 
+framerate is changed. After all velocities have been updated the height of 
+each column is modified by adding velocity multiplied by the time step. This 
 process of forward Euler integration can lead to feedback loops if not 
-controlled so we implement damping and clamping.  Velocity is damped by a 
+controlled so we implement damping and clamping. Velocity is damped by a 
 factor of 0.99 each step and column height is bounded between -100 and 100 
 although with the damping factor these extremes are rarely reached.
 
@@ -170,41 +194,54 @@ display it.
 
 Object interaction is implemented with a cube and our cube is drawn with edges 
 parallel to the edges of our columns the cube being dropped into the water 
-creating ripples can be seen in figure \ref{fig:ripples}.  To create these 
+creating ripples can be seen in figure \ref{fig:ripples}. To create these 
 ripples, during each step of 
 the simulation we 
 find the location of the corners of the cube with respect to the indices of our 
-columns.  This allows us to compare the cubes height with that of the water.  
+columns. This allows us to compare the cubes height with that of the water. 
 By subtracting the height of the base of the cube from the height of the water 
 and clamping between 0 and cube width we calculate the amount of water 
-displaced by the cube.  The displacement of each column is stored in another 
+displaced by the cube. The displacement of each column is stored in another 
 2-dimensional array and by comparing the new displacement with the old we are 
-able to calculate the change in displacement of water by the cube.  Once the 
+able to calculate the change in displacement of water by the cube. Once the 
 total displacement and the change in displacement are known these values are 
 used to calculate the force on the cube and the change in water level around 
-the cube respectively.  Any change in displaced water is added or subtracted 
-directly to the columns surrounding the cube.  Our height field inside the cube 
+the cube respectively. Any change in displaced water is added or subtracted 
+directly to the columns surrounding the cube. Our height field inside the cube 
 is not modified allowing water to cover the cube should it fall below the water 
-level.  Because the height field is not modified on the inside of the cube a 
-feedback loop can occur.  The displaced water is added to the surrounding 
+level. Because the height field is not modified on the inside of the cube a 
+feedback loop can occur. The displaced water is added to the surrounding 
 columns which flow inward increasing the amount of displaced water by the cube, 
-adding more water to the surrounding columns.  This was solved in two ways.  
+adding more water to the surrounding columns. This was solved in two ways. 
 The first option sets the height of each internal column to halfway up the 
-cube.  This allows the following update due to column velocity to pull a column 
+cube. This allows the following update due to column velocity to pull a column 
 above the cube and prevents the feedback loop but gives the water a much more 
 viscous appearance with it clinging to the cube, creating depressions and 
-mounds in the surface when the cube is dropped and raised respectively.  The 
+mounds in the surface when the cube is dropped and raised respectively. The 
 second option is to use the average water level instead of the local column 
-height.  This leads to realistic simulations when the water is relatively flat 
+height. This leads to realistic simulations when the water is relatively flat 
 but leads to disconnected water ripples and cube movement if the surface is far 
-above or below average at that location.  Once the water is updated the cube is 
-moved using Forward Euler integration and standard physics equations.  Force 
-due to water is calculated with density*gravity*displacement and both it and 
-gravity are applied to velocity and then velocity to cube location.
+above or below average at that location. Once the water is updated the cube is 
+moved using Forward Euler integration and standard physics equations. Force 
+due to water is calculated with density*gravity*displacement and both this 
+force and gravity are applied to velocity and then velocity to cube location 
+based on the time step.
 
-It is also important to ensure water is not added or removed from the simulation.  To do this we initially calculate an average volume for a column.  Upon each step we recalculate this average and add or subtract the difference from every column.  This prevents small errors in calculation from drastically altering the volume of our fluid over time.
+It is also important to ensure water is not added or removed from the 
+simulation. To do this we initially calculate an average volume for a column. 
+Upon each step we recalculate this average and add or subtract the difference 
+from every column. This prevents small errors in calculation from drastically 
+altering the volume of our fluid over time.
 
-The final step is drawing the height field.  To do this we created an additional array that contains a point representing the top left corner of each column.  The x and z components were the indices of a location and the y the height.  This array was transferred to the GPU via and VBO and VAO to as points.  A geometry shader then took each point and expanded it into a column, adding sides with specified widths and a height determined by the height of each point.  The columns were then shaded with Blinn-Phong shading.  A simple set of Blinn-Phong shaders were applied to the cube as well, completing our lighting.
+The final step is drawing the height field. To do this we created an additional 
+array that contains a point representing the top left corner of each column. 
+The x and z components were the indices of a location and the y component the 
+height. This array was transferred to the GPU via VBOs and VAOs to use as 
+points. A geometry shader then took each point and expanded it into a column, 
+adding sides with specified widths and a height determined by the height of 
+each point. The columns were then shaded with Blinn-Phong shading. A simple set 
+of Blinn-Phong shaders were applied to the cube as well, completing our 
+lighting.
 
 \section{Results}
 
@@ -226,7 +263,7 @@ Our implementation works well for modeling the surface movement of water as
 seen in figures \ref{fig:waves} and \ref{fig:front}. Ripples are clearly 
 visible and can be seen propagating off of the boundaries as seen in figure 
 \ref{fig:reflection}. Additionally, we were able to simulate object 
-interaction; our cube is able to both effect and be affected by water.  The 
+interaction; our cube is able to both effect and be affected by water. The 
 simulation also runs in real-time showing no significant slowdowns when run on 
 our machine. While we were unable to implement a mesh over the surface of the 
 water or any complex lighting techniques our focus was primarily on the 
@@ -240,15 +277,15 @@ simulation of water movement which our implementation successfully models.
 \end{figure}
 
 Our implementation does have a few bugs, most notably both of our options for 
-preventing feedback due to water displacement.  Setting the water level to the 
+preventing feedback due to water displacement. Setting the water level to the 
 center of the cube creates large depressions or hills as the cube moved below 
-or above the water’s surface as seen in figure \ref{fig:displacement}.  While 
+or above the water’s surface as seen in figure \ref{fig:displacement}. While 
 the water was still able to cover and separate from the cube the simulation was 
-more akin to oil then water due to the surface tension.  The other option 
-produced realistic results when the water level was near level.  However if for 
+more akin to oil then water due to the surface tension. The other option 
+produced realistic results when the water level was near level. However if for 
 some reason the cube was falling into water that was significantly higher or 
 lower than average the interaction would occur far later or earlier than it 
-should.  Other than this and minor problems due to our environmental constants, 
+should. Other than this and minor problems due to our environmental constants, 
 our simulation does perform as intended.
 
 \section{Conclusion}
@@ -282,9 +319,9 @@ every program.
 
 In the future, this program could easily be expanded using techniques described 
 in multiple articles. These expansions would similarly fall under two 
-categories, wave motion and visual effects. Motion expansions such as adding 
-breaking waves to a height field by creating a particle system for foam and 
-water spray at the apex of a wave are quite possible. It would be a simple 
+categories, wave movement and visual effects. Movement expansions such as 
+adding breaking waves to a height field by creating a particle system for foam 
+and water spray at the apex of a wave are quite possible. It would be a simple 
 matter to identify a wave that is breaking using the curve between multiple 
 columns at any given location on the height field and create and move the spray 
 with that wave. Another straightforward motion addition would be implementing 
@@ -295,7 +332,7 @@ Visually there is also a lot to expand upon. The first step would be
 transforming the columns of the height field to a curved surface. This would 
 greatly simplify creating reflections, refractions, cloudiness, and caustics 
 (the light disfigurations in a shallow body of water) using the normals found 
-through the curving of the surface.
+through the curve of the surface and applying them to said surface.
 
 % References Section
 % to add references, put them in the file references.bib in the same style
