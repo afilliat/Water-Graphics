@@ -1,24 +1,23 @@
 \documentclass[12pt,titlepage]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
-\usepackage[margin=1.0in]{geometry}
+% \usepackage[margin=1.0in]{geometry}
 \usepackage{graphicx}
-\usepackage[pdftex]{hyperref}
-\usepackage[english]{babel}
-\usepackage{csquotes}
-\usepackage{titling}
-\usepackage{titlesec}
-\usepackage{xspace}
-\usepackage{tabularx}
+% \usepackage[pdftex]{hyperref}
+% \usepackage{csquotes}
+% \usepackage{titling}
+% \usepackage{titlesec}
+% \usepackage{xspace}
+% \usepackage{tabularx}
 \usepackage{float}
-\usepackage{parskip}
+% \usepackage{parskip}
 
 \usepackage[backend=bibtex,style=numeric]{biblatex}
 \bibliography{references}
 
 % Title Page
 \title{Height Field Water Simulation}
-\author{Joseph Wilson, Arnaud Filliat, Jacob Davis}
+\author{Joseph Wilson, Arnaud Filliat, and Jacob Davis}
 
 
 \begin{document}
@@ -26,7 +25,18 @@
 
 \section{Abstract}
 
-Provide a one paragraph summary of your entire project. Very briefly mention why this technique is important, what makes it challenging, what your solution was, and what your results were. This is essentially condensing each section listed below into one or two sentences. You may want to actually write this section last.
+We investigated many ways of simulating water including wave particle systems, 
+procedural fluids, and various height fields. Of all the available methods, we 
+chose to implement a height field water simulation for two fundamental reasons, 
+the ability to run it in real time and the ability to implement realistic 
+object interactions. A height field is comprised of a two dimensional array of 
+columns that is particularly tailored for simulating fluid wave propagation. 
+Our implementation works well for modeling the surface movement of water 
+including ripples reflecting off of the boundaries of the height field. It also 
+works well for simulating object interactions that affect and are effected by 
+the height field. We faced challenges in creating realistic reflection off of 
+the boundaries and realistic interactions with a solid object that can both 
+affect and respond to the height field through basic kinematics.
 
 \section{Introduction}
 
@@ -44,7 +54,7 @@ most simulations.
     \caption{Height Field}
     \label{fig:field}
     \centering
-    \includegraphics[width=0.7\textwidth]{../www/images/field}
+    \includegraphics[width=0.5\textwidth]{../www/images/field}
 \end{figure}
 
 In this project we implement a height field simulation and give the user the 
@@ -103,8 +113,9 @@ Any water simulation has two primary parts, the water movement and the water
 lighting.  Our implementation focuses on water movement.  The height field 
 information is stored in two, two dimensional arrays.  One for column height 
 and one for column velocity.  These columns are updated each frame.  Each 
-column calculates the force on it due to the four surrounding columns with the 
-equation, f = c2*(u[i+1,j]+u[i-1,j]+u[i,j+1]+u[i,j-1]– 4u[i,j])/h2.  C 
+column calculates the force on it due to the four surrounding columns with this 
+equation. \[ f = c^2 ( u[i+1,j] + u[i-1,j] + u[i,j+1] + u[i,j-1] – 4 u[i,j] 
+)/h^2 \]  C 
 represents the speed of a wave and h represents the width of a column.  This 
 equation is derived from a reduction of realistic wave equations to two 
 dimensions.  Our simulation takes place on a large scale with each column 
@@ -123,7 +134,7 @@ although with the damping factor these extremes are rarely reached.
     \caption{Reflecting Waves}
     \label{fig:reflection}
     \centering
-    \includegraphics[width=0.7\textwidth]{../www/images/bouncingWaves}
+    \includegraphics[width=0.5\textwidth]{../www/images/bouncingWaves}
 \end{figure}
 	
 An important part of the simulation is using various boundary conditions to 
@@ -160,7 +171,7 @@ display it.
     \caption{Object Creating Ripples}
     \label{fig:ripples}
     \centering
-    \includegraphics[width=0.7\textwidth]{../www/images/objectRipples}
+    \includegraphics[width=0.5\textwidth]{../www/images/objectRipples}
 \end{figure}
 
 Object interaction is implemented with a cube and our cube is drawn with edges 
@@ -207,32 +218,31 @@ The final step is drawing the height field.  To do this we created an additional
     \caption{Dispersing Waves}
     \label{fig:waves}
     \centering
-    \includegraphics[width=0.7\textwidth]{../www/images/waterWaves}
+    \includegraphics[width=0.5\textwidth]{../www/images/waterWaves}
 \end{figure}
 
 \begin{figure}[H]
     \caption{Wave Front}
     \label{fig:front}
     \centering
-    \includegraphics[width=0.7\textwidth]{../www/images/waveFront}
+    \includegraphics[width=0.5\textwidth]{../www/images/waveFront}
 \end{figure}
 
 Our implementation works well for modeling the surface movement of water as 
-seen in figures \ref{fig:waves} and \ref{fig:front}.  
-Ripples are clearly visible and can be seen propagating off of walls as seen in 
-figure \ref{fig:reflection}. 
-Additionally, we were able to simulate object interaction; our cube is able to 
-both effect and be affected by water.  The simulation also runs in real-time 
-showing no significant slowdowns when run on our machine. While we were unable 
-to implement a mesh over the surface of the water or any complex lighting 
-techniques our focus was primarily on the simulation of water movement which 
-our implementation successfully models.
+seen in figures \ref{fig:waves} and \ref{fig:front}. Ripples are clearly 
+visible and can be seen propagating off of the boundaries as seen in figure 
+\ref{fig:reflection}. Additionally, we were able to simulate object 
+interaction; our cube is able to both effect and be affected by water.  The 
+simulation also runs in real-time showing no significant slowdowns when run on 
+our machine. While we were unable to implement a mesh over the surface of the 
+water or any complex lighting techniques our focus was primarily on the 
+simulation of water movement which our implementation successfully models.
 
 \begin{figure}[H]
     \caption{Object Creating Water Displacement}
     \label{fig:displacement}
     \centering
-    \includegraphics[width=0.7\textwidth]{../www/images/objectWaterDisplacement}
+    \includegraphics[width=0.5\textwidth]{../www/images/objectWaterDisplacement}
 \end{figure}
 
 Our implementation does have a few bugs, most notably both of our options for 
@@ -249,7 +259,49 @@ our simulation does perform as intended.
 
 \section{Conclusion}
 
-In a couple paragraphs, summarize all of the above sections. Give any final thoughts on lessons learned, challenges that arose and how they were overcome, and next steps to take to future work.
+We investigated many ways of simulating water including wave particle systems, 
+procedural fluids, and various height fields. Of all the available methods, we 
+chose to implement a height field water simulation for two fundamental reasons, 
+the ability to run it in real time and the ability to implement realistic 
+object interactions. Our implementation works well for modeling the surface 
+movement of water including ripples propagating off of the boundaries. It also 
+works well for simulating object interactions that affect and are effected by 
+the height field.
+
+We were faced with challenges with feedback in the columns during multiple 
+different interactions. The first interaction was in realistically creating 
+reflections off of the boundaries of the height field and creating spontaneous 
+ripples in the height field. Feedback was created due to two variables in these 
+instances. One variable was the amount of damping that was being performed on 
+the force applied to each column, the other was variance in the time step and 
+how and when the force was applied. We originally calculated then immediately 
+applied the force to a column and calculated it's new height in sequence 
+causing some columns to behave strangely and also causing lots of feedback. 
+This was solved by calculating the force on all columns then calculating the 
+new height of all columns at a set interval. Although this was a simple 
+mistake, it had very large impact on the performance of the height field. This 
+solution coupled with small changes in the damping factor led a to a much more 
+realistic simulation. Finding the correct damping factor was something we 
+expected to be troublesome though because every source we found indicated the 
+damping factor for height fields is not something that will be the same for 
+every program.
+
+In the future, this program could easily be expanded using techniques described 
+in multiple articles. These expansions would similarly fall under two 
+categories, wave motion and visual effects. Motion expansions such as adding 
+breaking waves to a height field by creating a particle system for foam and 
+water spray at the apex of a wave are quite possible. It would be a simple 
+matter to identify a wave that is breaking using the curve between multiple 
+columns at any given location on the height field and create and move the spray 
+with that wave. Another straightforward motion addition would be implementing 
+shallow water equations to simulate horizontal forces being applied to the 
+system rather than vertical forces as we implemented.
+
+Visually there is also a lot to expand upon. The first step would be 
+transforming the columns of the height field to a curved surface. This would 
+greatly simplify creating reflections, refractions, cloudiness, and caustics 
+(the light disfigurations in a shallow body of water) using the normals found 
+through the curving of the surface.
 
 % References Section
 % to add references, put them in the file references.bib in the same style
