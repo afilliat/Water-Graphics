@@ -264,8 +264,6 @@ void hfInitialize(int width, int depth) {
  * with several boundary options
  */
 void hfUpdate() {
-
-	
 	//Update ghost boundaries
 	for (int i = 0; i < 2*heightFieldWidth+2*heightFieldDepth; i++) {
 		/*

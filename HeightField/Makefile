@@ -1,4 +1,4 @@
-TARGET = HeightField
+TARGET = finalProject
 OBJECTS = main.o src/ShaderProgram.o src/ShaderUtils.o src/OpenGLUtils.o
 
 CXX    = C:/Rtools/mingw_64/bin/g++.exe
