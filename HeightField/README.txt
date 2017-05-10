@@ -51,11 +51,11 @@ Notes:
 	Time:
 		Joseph:
 		Jacob:
-		Arnaud:
+		Arnaud: 15
 	Fun:
 		Joseph:
 		Jacob:
-		Arnaud:
+		Arnaud: 6
 
 Notes:
     This example will ONLY work in the computer labs on campus.  Developed in

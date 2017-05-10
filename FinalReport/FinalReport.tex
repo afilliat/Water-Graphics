@@ -19,16 +19,27 @@ Provide a one paragraph summary of your entire project. Very briefly mention why
 
 \section{Introduction}
 
-Give a high level overview of your project. Why is it important? What makes it challenging/difficult? Describe what will follow in the rest of the report. This section should be several paragraphs long (roughly one plus column).
+Many applications of computer graphics involve fluid simulations of some sort.  The most realistic simulations involve massive particle systems and take large amounts of time to run offline.  For applications that are interactive, this is unreasonable and other solutions must be explored.  Procedural fluids are acceptable for background situations where the user does not actually interact with it but it’s illusion of realism is rapidly destroyed when any object comes in contact with it.  As such it is important to find a solution that allows interaction in real-time with fluids, primarily water.
+
+While many solutions exist most all rely on reducing the complexity of the simulation.  Wave particles reduce from a particle for each molecule of water to a particle for a wave that deforms the water surface as it passes.  We chose to focus on height fields which reduce a 3-dimensional particle system to a 2 dimensional system of columns.  This provides a massive reduction in computational intensity while maintaining an acceptable level of realism in most simulations.
+
+In this project we implement a height field simulation and give the user the ability to drop a cube into the fluid in real-time.  In this paper we will detail the internals of this implementation and problems we encountered.  We will begin, however, by discussing the advantages and disadvantages of various types of fluid simulations.
 
 \section{Related Work}
 
-Discuss what has previously been done in this area. What existing and similar solutions exists? What have other people done? Where did those existing solutions fall short? You should be citing your references the most in this section (though you will probably need to cite in the first three or four sections). The length of this section will vary.
+Computational fluid dynamics has a long history. The first development was in the 1800s when George Stokes formulated the Navier-Stokes equation which describes the dynamics of fluids. Using this equation which describes the conservation of momentum and a mass conservation equation and state equation it becomes possible to simulate fluids. (6)
+Numerous approaches have been used to describe fluid dynamics on computers. Particle-based approaches have been used to animate surfaces, lava flows, and animate fluid motion. (1,2,4) Using particles can simplify the conservation of mass equation and Navier-Stokes equation because the number of particles is constant and each particle has a constant mass thus conservation is guaranteed.
+Particle systems have been used for things other than fluid simulations too and are greatly applicable. A good example is for object modeling.(3) For fluids particle systems can realistically animate fluids and how they interact with various objects, yet fall short with larger bodies.(6)
+
+Another use for particle system is a wave particle method. Wave particle have position and mass like all other particles but also store the propagation angle, dispersion angle, origin, and amplitude. Using all of these the wave particle can give the direction of the wave, the energy of the wave and the spatial range in which the particles appear. In this particle system wave boundaries are required for reflecting the wave fronts.(8) Wave particles are similar to how height fields and our system will work yet our system should be able to be expanded to a bigger field without loss of real-time display due to the low computational overhead.
+
+Another technique used in the past involves shallow water equations. These equations also uses the Navier-Stokes equation and are derived by depth integrating it. This creates a set of partial differential equations that describe the flow below a pressure surface in a fluid.  An interesting point about shallow water equations is that the vertical velocity term is not present in them yet this does not mean the vertical velocity is zero as otherwise there would be no movement in the wave surface. Shallow water equations have been used in the past to model Coriolis forces in atmosphere and oceanic models.(7)
+
 
 \section{Problem Statement}
 
-Go into technical detail about the challenges in this area. What specifically makes it difficult? What shortcomings did other techniques have?
-
+Simulating water in real-time is very difficult as water is a large particle system where each particle interacts with its neighbors via a complex set of equations.  Very realistic water simulations can be created with particle systems, however, it is not generally reasonable to expect them to run in real-time.  This is due to the large amount of computational power required to update a complex 3-dimensional particle system.  One solution to the problem is wave particles.  Wave particles have a relatively low computational cost as the particles do not have to interact with each other and only have to apply a simple deformation to a plain.  The problem with wave particles is that it is difficult to model many different types of object.  The technique requires a separate set of information for each object resulting in large memory costs with many objects.  Height fields were the solution we chose as they reduced the computational complexity of particle systems to two dimensions while still providing a great deal of realism and the ability to interact with objects relatively easily with minimal comparative computational costs.  Shallow water equations provide a much more realistic simulation than height fields while requiring a minimal amount of extra memory but we were unable to reach a stage where we could implement them.
+ 
 \section{Problem Solution}
 
 Any water simulation has two primary parts, the water movement and the water 
@@ -88,7 +99,7 @@ The final step is drawing the height field.  To do this we created an additional
 
 \section{Results}
 
-Our implementation works well for modeling the surface movement of water.  Ripples are clearly visible and can be seen propagating off of walls. Additionally we were able to simulate object interaction; our cube is able to both effect and be affected by water.  The simulation also runs in real-time showing no significant slowdowns when run on our machine. While we were unable to implement a mesh over the surface of the water or any complex lighting techniques our focus was primarily on the simulation of water movement which our implementation successfully models.
+Our implementation works well for modeling the surface movement of water.  Ripples are clearly visible and can be seen propagating off of walls. Additionally, we were able to simulate object interaction; our cube is able to both effect and be affected by water.  The simulation also runs in real-time showing no significant slowdowns when run on our machine. While we were unable to implement a mesh over the surface of the water or any complex lighting techniques our focus was primarily on the simulation of water movement which our implementation successfully models.
 
 Our implementation does have a few bugs, most notably both of our options for preventing feedback due to water displacement.  Setting the water level to the center of the cube creates large depressions or hills as the cube moved below or above the water’s surface.  While the water was still able to cover and separate from the cube the simulation was more akin to oil then water due to the surface tension.  The other option produced realistic results when the water level was near level.  However if for some reason the cube was falling into water that was significantly higher or lower than average the interaction would occur far later or earlier than it should.  Other than this and minor problems due to our environmental constants our simulation does perform as it should.
 
