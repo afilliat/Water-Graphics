@@ -50,11 +50,11 @@ Compilation Instructions:
 Notes:
 	Time:
 		Joseph:
-		Jacob:
+		Jacob:	20
 		Arnaud: 15
 	Fun:
 		Joseph:
-		Jacob:
+		Jacob:	8
 		Arnaud: 6
 
 Notes:
