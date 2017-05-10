@@ -41,7 +41,7 @@ Usage:
 
 Compilation Instructions:
     Simply navigate to the directory and type 'mingw32-make.exe'
-	This creates an executable named HeightField.exe
+	This creates an executable named finalProject.exe
 	
 	You can also type 'mingw32-make clean' to clean up the build files.
 	
