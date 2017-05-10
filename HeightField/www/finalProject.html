@@ -104,7 +104,7 @@ In this project we implement a height field fluid simulation that runs in realti
 Field information is stored in two, two dimensional arrays. One for column
 height and one for column velocity. These columns are updated each frame.
 Each column calculates the force on it due to the four surrounding columns
-with the equation, f = c2*(u[i+1,j]+u[i-1,j]+u[i,j+1]+u[i,j-1]{ 4u[i,j])/h2. C
+with the equation, f = c*c*(u[i+1,j]+u[i-1,j]+u[i,j+1]+u[i,j-1]{ 4u[i,j])/h2. C
 represents the speed of a wave and h represents the width of a column. This
 equation is derived from a reduction of realistic wave equations to two di-
 mensions. Our simulation takes place on a large scale with each column
